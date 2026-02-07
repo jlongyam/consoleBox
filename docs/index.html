@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>&lt;Console&gt;</title>
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="../src/console.css" rel="stylesheet">
+  <link rel="stylesheet" href="./demo.css">
+</head>
+
+<body>
+
+  <div id="container" class="console_container">
+    <div id="main" class="console_sibling">
+      <h1>Welcome</h1>
+    </div>
+    <div id="console_box" class="hide">
+      <div id="console_bar">
+        <div class="console_bar__item left">
+          <i class="console_icon i_console"></i>
+        </div>
+        <div class="console_bar__item center">Console &copy; 2026</div>
+        <div class="console_bar__item right">
+          <i id="i_toggle" class="console_icon i_toggle hide"></i>
+        </div>
+      </div>
+      <div id="console_output">
+        <div id="console_out"></div>
+      </div>
+      <div id="console_input">
+        <input id="console_in" type="text" autocomplete="off" placeholder="Type JavaScript and press Enter...">
+      </div>
+    </div>
+  </div>
+
+  <script src="../src/console.js"></script>
+  <script src="./sample.js"></script>
+
+</body>
+
+</html>

@@ -1,0 +1,21 @@
+{
+  "name": "consolebox",
+  "version": "1.0.0",
+  "description": "Dev Console in HTML",
+  "keywords": ["console", "html", "playground"],
+  "author": "jlongyam",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jlongyam/consoleBox.git"
+  },
+  "homepage": "https://github.com/jlongyam/consoleBox",
+  "main": "index.js",
+  "type": "module",
+  "devDependencies": {
+    "@jlongyam/repo": "^2.0.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}

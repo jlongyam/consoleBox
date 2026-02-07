@@ -1,31 +1,23 @@
-// ECMAScript Console Standard compliant
-// https://console.spec.whatwg.org/
 (function (global) {
-  if (typeof global.console === "object") {
-    global.$console = global.console
-    delete global.console;
-  }
-    // ANSI color conversion functions
   function escapeHtml(text) {
-    return text.replace(/&/g, '&amp;')
-               .replace(/</g, '&lt;')
-               .replace(/>/g, '&gt;')
-               .replace(/"/g, '&quot;')
-               .replace(/'/g, '&#39;');
+    return text
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;')
+      ;
   }
   function ansiToHtml(text) {
     const ansiMap = {
-      // Text colors
       '30': 'color: black',
-      '31': 'color: #ef476f',  // red
-      '32': 'color: #06d6a0',  // green
-      '33': 'color: #ffd166',  // yellow
-      '34': 'color: #118ab2',  // blue
-      '35': 'color: #8338ec',  // magenta
-      '36': 'color: #00b4d8',  // cyan
+      '31': 'color: #ef476f',
+      '32': 'color: #06d6a0',
+      '33': 'color: #ffd166',
+      '34': 'color: #118ab2',
+      '35': 'color: #8338ec',
+      '36': 'color: #00b4d8',
       '37': 'color: white',
-      
-      // Background colors
       '40': 'background-color: black',
       '41': 'background-color: #ef476f',
       '42': 'background-color: #06d6a0',
@@ -34,8 +26,6 @@
       '45': 'background-color: #8338ec',
       '46': 'background-color: #00b4d8',
       '47': 'background-color: white',
-      
-      // Bright text colors
       '90': 'color: rgb(85,85,85)',
       '91': 'color: rgb(255,85,85)',
       '92': 'color: rgb(85,255,85)',
@@ -44,30 +34,22 @@
       '95': 'color: rgb(255,85,255)',
       '96': 'color: rgb(85,255,255)',
       '97': 'color: rgb(255,255,255)',
-      
-      // Text attributes
       '1': 'font-weight: bold',
       '3': 'font-style: italic',
       '4': 'text-decoration: underline',
       '7': 'filter: invert(100%)',
       '9': 'text-decoration: line-through',
-      
-      // Reset
       '0': 'all: initial'
     };
-
     const ansiRegex = /\x1b\[([0-9;]*)m/g;
     let html = '';
     let stack = [];
     let lastIndex = 0;
     let match;
-    
     while ((match = ansiRegex.exec(text)) !== null) {
       html += escapeHtml(text.slice(lastIndex, match.index));
       const codes = match[1].split(';').filter(code => code !== '');
-      
       if (codes.length === 0) codes.push('0');
-      
       for (const code of codes) {
         if (code === '0') {
           while (stack.length > 0) {
@@ -79,17 +61,13 @@
           stack.push(code);
         }
       }
-      
       lastIndex = match.index + match[0].length;
     }
-    
     html += escapeHtml(text.slice(lastIndex));
-    
     while (stack.length > 0) {
       html += '</span>';
       stack.pop();
     }
-    
     return html;
   }
   function formatArgs(args) {
@@ -124,15 +102,12 @@
       if (lastIndex < str.length) {
         nodes.push(document.createTextNode(str.slice(lastIndex)));
       }
-      // Add any remaining arguments
       for (; i < rest.length; i++) {
         nodes.push(document.createTextNode(" "));
         nodes.push(formatSingleArg(rest[i]));
-        // nodes.push(rest[i]);
       }
       return { formatted: nodes, styles };
     } else {
-      // No substitution, return array of spans
       var spans = Array.prototype.map.call(args, formatSingleArg);
       return { formatted: spans, styles: [] };
     }
@@ -165,9 +140,7 @@
     var span = document.createElement("span");
     var typeClass = getTypeClass(arg);
     span.className = typeClass;
-    
     if (typeClass === "js-string") {
-      // Convert ANSI colors in strings
       if (typeof arg === 'string' && arg.includes('\x1b[')) {
         const tempDiv = document.createElement('div');
         tempDiv.innerHTML = ansiToHtml(arg);
@@ -204,53 +177,38 @@
     }
     return span;
   }
-
   var timers = {};
   var counts = {};
   var indentLevel = 0;
   var indentString = "  ";
   var groupStack = [];
-
   function createGroup(label, isCollapsed) {
     var out = document.getElementById("console_out");
     if (!out) return;
-
-    // Determine target container (current group or main console)
     var targetContainer = out;
     if (groupStack.length > 0) {
       var currentGroup = groupStack[groupStack.length - 1];
       targetContainer = currentGroup.contentDiv;
     }
-
-    // Create group wrapper
     var groupWrapper = document.createElement("div");
     groupWrapper.className = "console-group";
-
-    // Create group header with toggle
     var groupHeader = document.createElement("div");
     groupHeader.className = "console-group-header";
-
     var toggle = document.createElement("span");
     toggle.className = "dir-toggle";
     toggle.textContent = isCollapsed ? "▶" : "▼";
-
     var labelSpan = document.createElement("span");
     labelSpan.className = "console-group-label";
     labelSpan.textContent = label;
-
     groupHeader.appendChild(toggle);
     if (label) {
       groupHeader.appendChild(labelSpan);
     }
-
-    // Create content container
     var contentDiv = document.createElement("div");
     contentDiv.className = "console-group-content";
     if (isCollapsed) {
       contentDiv.classList.add("dir-hidden");
     }
-
-    // Toggle functionality
     function doToggle(e) {
       e.stopPropagation();
       if (contentDiv.classList.contains("dir-hidden")) {
@@ -263,26 +221,20 @@
         toggle.textContent = "▶";
       }
     }
-
     toggle.addEventListener("click", doToggle);
     toggle.addEventListener("touchstart", function (e) {
       e.preventDefault();
       doToggle(e);
     });
-
-    // Assemble group
     groupWrapper.appendChild(groupHeader);
     groupWrapper.appendChild(contentDiv);
     targetContainer.appendChild(groupWrapper);
-
-    // Add to group stack
     groupStack.push({
       wrapper: groupWrapper,
       contentDiv: contentDiv,
       label: label,
     });
   }
-
   function isExpandable(val) {
     return (
       val &&
@@ -290,7 +242,6 @@
       (Array.isArray(val) || Object.keys(val).length > 0)
     );
   }
-
   function renderTree(obj, depth) {
     depth = depth || 0;
     var container = document.createElement("div");
@@ -317,7 +268,6 @@
     }
     return container;
   }
-
   function renderTreeEntry(key, val, depth) {
     var entry = document.createElement("div");
     entry.className = "dir-tree-entry dir-indent-" + Math.min(depth, 9);
@@ -373,28 +323,23 @@
     }
     return entry;
   }
-
   function consolePrint(type, args, rawObj) {
     var indent = indentString.repeat(indentLevel);
     var out = document.getElementById("console_out");
     if (!out) return;
-
     var targetContainer = out;
     if (groupStack.length > 0) {
       var currentGroup = groupStack[groupStack.length - 1];
       targetContainer = currentGroup.contentDiv;
     }
-
     var div = document.createElement("div");
     div.className = type;
-    
     if (
-      (type === "log" || type === "info" || type === "warn" || 
-       type === "error" || type === "debug") &&
+      (type === "log" || type === "info" || type === "warn" ||
+        type === "error" || type === "debug") &&
       args.length > 0
     ) {
       var { formatted, styles } = formatArgs(args);
-      
       if (styles.length > 0) {
         var spanIdx = 0;
         var styleIdx = 0;
@@ -416,7 +361,6 @@
         div.appendChild(document.createTextNode(indent));
         for (var i = 0; i < formatted.length; i++) {
           if (i > 0) div.appendChild(document.createTextNode(" "));
-          // Check for ANSI colors in text nodes
           if (formatted[i].nodeType === 3 && formatted[i].textContent.includes('\x1b[')) {
             const tempDiv = document.createElement('div');
             tempDiv.innerHTML = ansiToHtml(formatted[i].textContent);
@@ -474,7 +418,6 @@
       var { formatted } = formatArgs(args);
       div.appendChild(document.createTextNode(indent));
       for (var i = 0; i < formatted.length; i++) {
-        // Check for ANSI colors in text nodes
         if (formatted[i].nodeType === 3 && formatted[i].textContent.includes('\x1b[')) {
           const tempDiv = document.createElement('div');
           tempDiv.innerHTML = ansiToHtml(formatted[i].textContent);
@@ -488,8 +431,7 @@
     }
     targetContainer.appendChild(div);
   }
-
-  var console = {
+  var displayConsole = {
     log: function () {
       consolePrint("log", arguments);
     },
@@ -542,15 +484,15 @@
     exception: function () {
       consolePrint("error", arguments);
     },
-    markTimeline: function () {},
-    timeline: function () {},
-    timelineEnd: function () {},
+    markTimeline: function () { },
+    timeline: function () { },
+    timelineEnd: function () { },
     timeStamp: function (label) {
       consolePrint("timeStamp", [
         label ? String(label) : "Timestamp: " + new Date().toISOString(),
       ]);
     },
-    context: function () {},
+    context: function () { },
     memory: {},
     timeEnd: function (label) {
       label = label || "default";
@@ -576,10 +518,8 @@
     table: function (data, columns) {
       var out = document.getElementById("console_out");
       if (!out) return;
-
       var div = document.createElement("div");
       div.className = "table";
-
       var formatValue = function (value) {
         if (value === undefined) return "undefined";
         if (value === null) return "null";
@@ -595,12 +535,9 @@
         }
         return String(value);
       };
-
       var table = document.createElement("table");
       table.className = "console-table";
-
       if (Array.isArray(data)) {
-        // Determine what kind of array we have
         var isAllArrays =
           data.length > 0 &&
           data.every(function (item) {
@@ -611,11 +548,8 @@
           data.every(function (item) {
             return item && typeof item === "object" && !Array.isArray(item);
           });
-
         var headers;
-
         if (isAllArrays) {
-          // Array of arrays: headers should be (index), 0, 1, 2, ...
           var maxLength = Math.max.apply(
             Math,
             data.map(function (arr) {
@@ -627,7 +561,6 @@
             headers.push(String(i));
           }
         } else if (isAllObjects) {
-          // Array of objects: get all unique keys
           var allKeys = new Set();
           data.forEach(function (item) {
             if (item && typeof item === "object" && !Array.isArray(item)) {
@@ -638,11 +571,8 @@
           });
           headers = ["(index)"].concat(Array.from(allKeys).sort());
         } else {
-          // Array of primitives or mixed array
           headers = ["(index)", "Value"];
         }
-
-        // Apply column filtering if specified
         if (columns && Array.isArray(columns)) {
           var filteredHeaders = ["(index)"];
           columns.forEach(function (col) {
@@ -652,8 +582,6 @@
           });
           headers = filteredHeaders;
         }
-
-        // Create headers
         var thead = document.createElement("thead");
         var headerRow = document.createElement("tr");
         headers.forEach(function (h) {
@@ -663,54 +591,37 @@
         });
         thead.appendChild(headerRow);
         table.appendChild(thead);
-
-        // Create rows
         var tbody = document.createElement("tbody");
         data.forEach(function (item, index) {
           var row = document.createElement("tr");
-
-          // Index cell
           var indexCell = document.createElement("td");
           indexCell.textContent = index;
           row.appendChild(indexCell);
-
-          // Data cells
           headers.slice(1).forEach(function (header) {
             var cell = document.createElement("td");
             var value;
-
             if (header === "Value") {
-              // For primitives or mixed arrays
               value = item;
             } else if (isAllArrays && Array.isArray(item)) {
-              // For array of arrays, header is the array index
               var arrayIndex = parseInt(header);
               value = item[arrayIndex];
             } else if (isAllObjects && item && typeof item === "object") {
-              // For objects, header is the property name
               value = item[header];
             } else {
               value = undefined;
             }
-
             cell.textContent = formatValue(value);
             row.appendChild(cell);
           });
-
           tbody.appendChild(row);
         });
         table.appendChild(tbody);
       } else if (typeof data === "object" && data !== null) {
-        // Object handling - properties as rows
         var props = new Set();
-
-        // Get all properties including inherited
         for (var key in data) props.add(key);
         Object.getOwnPropertyNames(data).forEach(function (prop) {
           props.add(prop);
         });
-
-        // Create table
         var thead = document.createElement("thead");
         var headerRow = document.createElement("tr");
         ["(index)", "Value"].forEach(function (h) {
@@ -720,22 +631,15 @@
         });
         thead.appendChild(headerRow);
         table.appendChild(thead);
-
-        // Create rows
         var tbody = document.createElement("tbody");
         Array.from(props)
           .sort()
           .forEach(function (prop) {
             if (prop === "constructor") return;
-
             var row = document.createElement("tr");
-
-            // Property name
             var propCell = document.createElement("td");
             propCell.textContent = prop;
             row.appendChild(propCell);
-
-            // Property value
             var valueCell = document.createElement("td");
             try {
               valueCell.textContent = formatValue(data[prop]);
@@ -743,17 +647,14 @@
               valueCell.textContent = "<access denied>";
             }
             row.appendChild(valueCell);
-
             tbody.appendChild(row);
           });
         table.appendChild(tbody);
       } else {
-        // Primitive value
         div.textContent = formatValue(data);
         out.appendChild(div);
         return;
       }
-
       div.appendChild(table);
       out.appendChild(div);
     },
@@ -766,7 +667,6 @@
         var container = document.createElement("div");
         container.className = "dir-tree dir-indent-" + Math.min(depth, 9);
         if (node.nodeType === 1) {
-          // Element
           var entry = document.createElement("div");
           entry.className = "dir-tree-entry dir-indent-" + Math.min(depth, 9);
           var collapsedLine = document.createElement("div");
@@ -777,7 +677,6 @@
           var tagSpan = document.createElement("span");
           tagSpan.className = "dir-key";
           tagSpan.textContent = "<" + node.nodeName.toLowerCase();
-          // Add attributes
           for (var i = 0; i < node.attributes.length; i++) {
             var attr = node.attributes[i];
             tagSpan.textContent += " " + attr.name + '="' + attr.value + '"';
@@ -787,11 +686,9 @@
           collapsedLine.appendChild(tagSpan);
           var expanded = document.createElement("div");
           expanded.className = "dir-hidden";
-          // Children
           for (var j = 0; j < node.childNodes.length; j++) {
             expanded.appendChild(renderDomTree(node.childNodes[j], depth + 1));
           }
-          // Closing tag
           if (node.childNodes.length > 0) {
             var closeTag = document.createElement("div");
             closeTag.className =
@@ -825,7 +722,6 @@
           if (node.childNodes.length > 0) entry.appendChild(expanded);
           container.appendChild(entry);
         } else if (node.nodeType === 3) {
-          // Text
           var textContent = node.textContent.trim();
           if (textContent) {
             var textEntry = document.createElement("div");
@@ -838,7 +734,6 @@
             container.appendChild(textEntry);
           }
         } else if (node.nodeType === 8) {
-          // Comment
           var commentEntry = document.createElement("div");
           commentEntry.className =
             "dir-tree-entry dir-indent-" + Math.min(depth, 9);
@@ -848,12 +743,10 @@
           commentEntry.appendChild(commentSpan);
           container.appendChild(commentEntry);
         } else if (node.nodeType === 9) {
-          // Document
           for (var k = 0; k < node.childNodes.length; k++) {
             container.appendChild(renderDomTree(node.childNodes[k], depth));
           }
         } else {
-          // Other node types
           var otherEntry = document.createElement("div");
           otherEntry.className =
             "dir-tree-entry dir-indent-" + Math.min(depth, 9);
@@ -876,11 +769,9 @@
         consolePrint("dirxml", [""], obj);
       }
     },
-    profile: function (label) {},
-    profileEnd: function (label) {},
+    profile: function (label) { },
+    profileEnd: function (label) { },
   };
-
-  // Console area and input
   if (!document.getElementById("console_out")) {
     var outDiv = document.createElement("div");
     outDiv.id = "console_out";
@@ -953,13 +844,21 @@
     });
     observer.observe(out, { childList: true });
   }
-
-  Object.defineProperty(console, "memory", {
+  let i_toggle = document.querySelector('#i_toggle');
+  let console_box = document.getElementById('console_box');
+  i_toggle.addEventListener('click', function() {
+    console_box.classList.toggle('hide');
+    this.classList.toggle('hide');
+  });
+  Object.defineProperty(displayConsole, "memory", {
     get: function () {
       return {};
     },
     configurable: true,
   });
-
-  global.console = console;
+  if (typeof global.console === "object") {
+    global.defaultConsole = global.console
+    delete global.console;
+  }
+  global.console = displayConsole;
 })(window);
