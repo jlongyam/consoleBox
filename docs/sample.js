@@ -1,6 +1,6 @@
 if(location.protocol === 'https') {
   let link_0 = document.querySelector('link');
-  console.log()
+  console.log(location.origin);
 }
 
 let container = document.querySelector('#container');
