@@ -16,6 +16,13 @@
     "@jlongyam/repo": "^2.0.0"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  }
+    "changelog": "repo changelog",
+    "prepare": "repo prepare"
+  },
+  "files": [
+    "./README.md",
+    "./LICENSE",
+    "./src",
+    "./docs"
+  ]
 }

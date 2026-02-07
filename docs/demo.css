@@ -2,6 +2,29 @@
   background-color: antiquewhite;
   color: black;
 }
-#main {
-  padding: 32px;
+#preview,
+#source {
+  padding: 22px;
+}
+.layout_split {
+  display: flex;
+  height: 100vh;
+}
+.item_split {
+  flex: 1;
+}
+.item_split.left {
+  background-color: #f0f0f0;
+}
+.item_split.right {
+  background-color: #e0e0e0;
+}
+@media (max-width: 768px) {
+  .layout_split {
+    flex-direction: column; 
+  }
+
+  .item_split {
+    height: 50vh;
+  }
 }

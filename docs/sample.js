@@ -1,3 +1,8 @@
+if(location.protocol === 'https') {
+  let link_0 = document.querySelector('link');
+  console.log()
+}
+
 let container = document.querySelector('#container');
 
 console.dirxml(container);
