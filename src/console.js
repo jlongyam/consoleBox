@@ -1,7 +1,10 @@
 // ECMAScript Console Standard compliant
 // https://console.spec.whatwg.org/
 (function (global) {
-  if (typeof global.console === "object") delete global.console;
+  if (typeof global.console === "object") {
+    global.$console = global.console
+    delete global.console;
+  }
     // ANSI color conversion functions
   function escapeHtml(text) {
     return text.replace(/&/g, '&amp;')
@@ -125,6 +128,7 @@
       for (; i < rest.length; i++) {
         nodes.push(document.createTextNode(" "));
         nodes.push(formatSingleArg(rest[i]));
+        // nodes.push(rest[i]);
       }
       return { formatted: nodes, styles };
     } else {

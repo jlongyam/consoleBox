@@ -15,10 +15,12 @@ body {
 #console_box {
   position: relative;
   width: 100%;
-  bottom: 0;
+  /* bottom: 0;
   left: 0;
-  height: 100%;
+  height: 100%; */
   /* min-height: 50vh; */
+  height: 50vh;
+  height: 50%;
   background-color: silver;
   color: black;
   display: flex;
@@ -54,17 +56,23 @@ body {
         height: 24px;
         background-position: center;
         background-repeat: no-repeat;
+        
       }
       .i_console {
-        background-image: url('data:image/svg+xml;utf8,<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"> <path d="M13.325 3.05011L8.66741 20.4323L10.5993 20.9499L15.2568 3.56775L13.325 3.05011Z" fill="silver"/> <path d="M7.61197 18.3608L8.97136 16.9124L8.97086 16.8933L3.87657 12.1121L8.66699 7.00798L7.20868 5.63928L1.04956 12.2017L7.61197 18.3608Z" fill="silver" /> <path d="M16.388 18.3608L15.0286 16.9124L15.0291 16.8933L20.1234 12.1121L15.333 7.00798L16.7913 5.63928L22.9504 12.2017L16.388 18.3608Z" fill="silver"/></svg>');
+        background-image: url('./code_24dp_FFFFFF_FILL0_wght400_GRAD0_opsz24.svg');
       }
       .i_toggle {
-        background-image: url('data:image/svg+xml;utf8,<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M13.4142 10.1091L13.4179 10.1128L12.0037 11.527L12 11.5233L11.9963 11.527L10.5821 10.1128L10.5858 10.1091L7.76105 7.28433L9.17526 5.87012L12 8.69486L14.8247 5.87012L16.239 7.28433L13.4142 10.1091Z" fill="silver"/><path d="M12 15.3052L14.8247 18.1299L16.239 16.7157L13.4142 13.891L13.4179 13.8873L12.0037 12.4731L12 12.4767L11.9963 12.4731L10.5821 13.8873L10.5858 13.891L7.76105 16.7157L9.17526 18.1299L12 15.3052Z" fill="silver"/></svg>');
-        cursor: pointer;
+        background-image: url('./arrow_drop_down_24dp_FFFFFF_FILL0_wght400_GRAD0_opsz24.svg');
       }
       .i_toggle:hover {
-        background-color: rgb(109, 109, 109);
+        opacity: 0.8;
+        cursor: pointer;
       }
+      .i_toggle.hide {
+        transform: rotate(180deg);
+        /* background-image: url('data:image/svg/xml;utf8,<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M14.8543 11.9741L16.2686 10.5599L12.0259 6.31724L7.78327 10.5599L9.19749 11.9741L11.0259 10.1457V17.6828H13.0259V10.1457L14.8543 11.9741Z" fill="silver"/><path fill-rule="evenodd" clip-rule="evenodd" d="M1 19C1 21.2091 2.79086 23 5 23H19C21.2091 23 23 21.2091 23 19V5C23 2.79086 21.2091 1 19 1H5C2.79086 1 1 2.79086 1 5V19ZM5 21H19C20.1046 21 21 20.1046 21 19V5C21 3.89543 20.1046 3 19 3H5C3.89543 3 3 3.89543 3 5V19C3 20.1046 3.89543 21 5 21Z" fill="silver"/></svg>'); */
+      }
+      
       .console_bar__item.L {
         width: 10%;
         justify-content: flex-start;
@@ -99,3 +107,15 @@ body {
       height: 100%;
       /* display: none; */
     }
+
+/* event */
+#console_box.hide > #console_output,
+#console_box.hide > #console_input {
+  display: none;
+}
+#console_box.hide {
+  height: 3em;
+}
+#console_box.hide > #console_bar {
+  border-bottom: none;
+}

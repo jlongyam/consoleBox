@@ -20,59 +20,16 @@
 }
 
 /* JS type coloring */
-.js-string {
-  color: #efece8;
-  color: inherit;
-}
-
-.js-number {
-  color: #85cddd;
-  color: inherit;
-}
-
-.js-boolean {
-  color: #676cff;
-  color: inherit;
-}
-
-.js-null {
-  color: #bd93f9;
-  font-style: italic;
-  color: inherit;
-}
-
-.js-undefined {
-  color: #6272a4;
-  font-style: italic;
-  color: inherit;
-  font-style: inherit;
-}
-
-.js-object {
-  color: #ffc53e;
-  color: inherit;
-}
-
-.js-array {
-  color: #19d477;
-  color: inherit;
-}
-
-.js-function {
-  color: #f8f8f2;
-  font-style: italic;
-  color: inherit;
-  font-style: inherit;
-}
-
-.js-symbol {
-  color: #ff5555;
-  color: inherit;
-}
-
+.js-string,
+.js-number,
+.js-boolean,
+.js-null,
+.js-undefined,
+.js-object,
+.js-array,
+.js-function,
+.js-symbol,
 .js-bigint {
-  color: #ff79c6;
-  font-weight: bold;
   color: inherit;
   font-weight: inherit;
 }
