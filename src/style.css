@@ -1,0 +1,101 @@
+@import url("./global.css");
+@import url("./console.css");
+
+
+body {
+  margin: 0;
+  padding: 5%;
+  background-color: gray;
+  color: whitesmoke;
+}
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+#console_box {
+  position: relative;
+  width: 100%;
+  bottom: 0;
+  left: 0;
+  height: 100%;
+  /* min-height: 50vh; */
+  background-color: silver;
+  color: black;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  /* border: 2px solid silver; */
+}
+  #console_bar {
+    height: 3em;
+    background-color: #181c20;
+    color: white;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    border-bottom: 1px solid silver;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 16px;
+    }
+    .console_bar__item {
+      /* border: 2px solid silver; */
+      height: 100%;
+      /* min-width: 32px; */
+      display: flex;
+      flex-wrap: wrap;
+      align-content: center;
+      justify-content: center;
+      }
+      .console_icon {
+        display: inline-block;
+        width: 24px;
+        height: 24px;
+        background-position: center;
+        background-repeat: no-repeat;
+      }
+      .i_console {
+        background-image: url('data:image/svg+xml;utf8,<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"> <path d="M13.325 3.05011L8.66741 20.4323L10.5993 20.9499L15.2568 3.56775L13.325 3.05011Z" fill="silver"/> <path d="M7.61197 18.3608L8.97136 16.9124L8.97086 16.8933L3.87657 12.1121L8.66699 7.00798L7.20868 5.63928L1.04956 12.2017L7.61197 18.3608Z" fill="silver" /> <path d="M16.388 18.3608L15.0286 16.9124L15.0291 16.8933L20.1234 12.1121L15.333 7.00798L16.7913 5.63928L22.9504 12.2017L16.388 18.3608Z" fill="silver"/></svg>');
+      }
+      .i_toggle {
+        background-image: url('data:image/svg+xml;utf8,<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M13.4142 10.1091L13.4179 10.1128L12.0037 11.527L12 11.5233L11.9963 11.527L10.5821 10.1128L10.5858 10.1091L7.76105 7.28433L9.17526 5.87012L12 8.69486L14.8247 5.87012L16.239 7.28433L13.4142 10.1091Z" fill="silver"/><path d="M12 15.3052L14.8247 18.1299L16.239 16.7157L13.4142 13.891L13.4179 13.8873L12.0037 12.4731L12 12.4767L11.9963 12.4731L10.5821 13.8873L10.5858 13.891L7.76105 16.7157L9.17526 18.1299L12 15.3052Z" fill="silver"/></svg>');
+        cursor: pointer;
+      }
+      .i_toggle:hover {
+        background-color: rgb(109, 109, 109);
+      }
+      .console_bar__item.L {
+        width: 10%;
+        justify-content: flex-start;
+        }
+      .console_bar__item.C {
+        flex-grow: 1;
+        }
+      .console_bar__item.R {
+        width: 20%;
+        justify-content: flex-end;
+        }
+
+  #console_output {
+
+    background-color: #181c20;
+    color: white;
+    height: calc(100% - 6em);
+    }
+    #console_out {
+      width: 100%;
+      height: 100%;
+    }
+  #console_input {
+    background-color: #181c20;
+    color: white;
+    height: 3em;
+    }
+    #console_in {
+      /* border: 2px solid teal; */
+      position: relative;
+      width: 100%;
+      height: 100%;
+      /* display: none; */
+    }

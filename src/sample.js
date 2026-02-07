@@ -1,0 +1,33 @@
+// Sample usages
+console.log('log', 123, { a: 1 });
+console.info('info', [1, 2, 3]);
+console.warn('warn', 'something might be wrong');
+console.error('error', new Error('fail'));
+console.debug('debug', 'debugging');
+console.assert(false, 'assert failed', { x: 42 });
+console.assert(true, 'should not print');
+console.count('myLabel');
+console.count('myLabel');
+console.countReset('myLabel');
+console.count('myLabel');
+console.group('group');
+console.log('inside group');
+console.groupEnd();
+console.time('timer1');
+setTimeout(function () {
+  console.timeLog('timer1');
+  console.timeEnd('timer1');
+  console.trace('trace test');
+  // Sample console.table usage with array of objects
+  console.table([{ a: 1, b: 2 }, { a: 3, b: 4 }]);
+  // Sample console.table usage with object of objects
+  console.table({
+    foo: { x: 10, y: 20 },
+    bar: { x: 30, y: 40 }
+  });
+  // Sample console.table usage with array of primitives
+  console.table(['apple', 'banana', 'cherry']);
+  console.dir({ foo: 'bar', baz: [1, 2, 3] });
+  console.dirxml({ foo: 'bar', baz: [1, 2, 3] });
+}, 100);
+console.dirxml(fake)
