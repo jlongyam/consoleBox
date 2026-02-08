@@ -8,7 +8,7 @@
 }
 .layout_split {
   display: flex;
-  height: 100vh;
+  height: 100%;
 }
 .item_split {
   flex: 1;
@@ -22,9 +22,5 @@
 @media (max-width: 768px) {
   .layout_split {
     flex-direction: column; 
-  }
-
-  .item_split {
-    height: 50vh;
   }
 }
