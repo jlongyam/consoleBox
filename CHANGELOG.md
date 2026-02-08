@@ -6,6 +6,32 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
+## [1.0.4] - 2026-02-08
+
+### Added
+
+- feature: enable consoleBox and add debug logs - _jlongyam_
+
+### Fixed
+
+- fix: Remove hide class from console_box and i_toggle - _jlongyam_
+- fix: use web-dev-server for docs preview - _jlongyam_
+- fix: Change default export to named export - _jlongyam_
+- Fix typo in docs import.js - _jlongyam_
+- fix: Add consoleBox type to preview - _jlongyam_
+- fix: mobile console not appear - _jlongyam_
+- fix: mobile Add preview of window.console type before override - _jlongyam_
+- fix: update broken link in docs/iife.html - _jlongyam_
+
+### Changed
+
+- documentation: Update CHANGELOG.md with version 1.0.3 and 1.0.2 changes - _jlongyam_
+
+### Other
+
+- 1.0.4 - _jlongyam_
+- ref: Refactor import/export and update GitHub Pages - _jlongyam_
+
 ## [1.0.3] - 2026-02-08
 
 ### Added
