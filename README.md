@@ -1,5 +1,7 @@
 # ConsoleBox
 
+[![](https://data.jsdelivr.com/v1/package/gh/jlongyam/consoleBox/badge)](https://www.jsdelivr.com/package/gh/jlongyam/consoleBox)
+
 Dev Console in HTML
 
 Standard: <https://console.spec.whatwg.org/>
@@ -14,10 +16,6 @@ window.console = consoleBox;
 // restore
 window.console = window.defaultConsole;
 ```
-
-## CDN
-
-- <https://www.jsdelivr.com/package/gh/jlongyam/consoleBox>
 
 ## Roadmap
 
