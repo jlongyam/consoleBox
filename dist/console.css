@@ -55,7 +55,7 @@
   cursor: pointer;
 }
 .i_toggle.hide {
-  transform: rotate(180deg);
+  transform: rotate(90deg);
 }
 .console_bar__item.left {
   justify-content: flex-start;
