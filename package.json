@@ -31,8 +31,7 @@
     "_types": "tsc",
     "build": "npm run _rollup && npm run _assetic && npm run _types",
     "escheck": "repo escheck ./dist/iife/consoleBox.js",
-    "changelog": "repo changelog",
-    "prepare": "npm publish --dry-run"
+    "changelog": "repo changelog"
   },
   "files": [
     "./README.md",
