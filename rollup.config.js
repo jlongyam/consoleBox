@@ -36,7 +36,7 @@ export default (arg) => {
   const format = ['es', 'iife'];
   // lib { <file_name>: <export_name> }
   const lib = {
-    console: "displayConsole"
+    console: "consoleBox"
   };
   const terser_ = [
     terser({

@@ -1,3 +1,5 @@
+import consoleBox from '../dist/es/consoleBox.js';
+
 window.defaultConsole = window.console
 delete window.console;
 window.console = consoleBox;

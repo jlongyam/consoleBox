@@ -440,7 +440,7 @@ function consolePrint(type, args, rawObj) {
   }
   targetContainer.appendChild(div);
 }
-var displayConsole = {
+var consoleBox = {
   log: function () {
     consolePrint("log", arguments);
   },
@@ -867,20 +867,18 @@ i_toggle.addEventListener('click', function () {
   console_box.classList.toggle('hide');
   this.classList.toggle('hide');
 });
-Object.defineProperty(displayConsole, "memory", {
+Object.defineProperty(consoleBox, "memory", {
   get: function () {
     return {};
   },
   configurable: true,
 });
 
-export default displayConsole
+export default consoleBox
 
 // env.global.defaultConsole = env.global.console
 // delete env.global.console;
-// env.global.console = displayConsole;
-
-
+// env.global.console = consoleBox;
 
 /*
 ;(function (global) {

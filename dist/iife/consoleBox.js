@@ -1,4 +1,4 @@
-var displayConsole = function() {
+var consoleBox = function() {
   function _arrayLikeToArray(r, a) {
     (null == a || a > r.length) && (a = r.length);
     for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e];
@@ -332,7 +332,7 @@ var displayConsole = function() {
       targetContainer.appendChild(div);
     }
   }
-  var input, displayConsole = {
+  var input, consoleBox = {
     log: function() {
       consolePrint("log", arguments);
     },
@@ -606,10 +606,10 @@ var displayConsole = function() {
   var i_toggle = document.querySelector("#i_toggle"), console_box = document.getElementById("console_box");
   return i_toggle.addEventListener("click", function() {
     console_box.classList.toggle("hide"), this.classList.toggle("hide");
-  }), Object.defineProperty(displayConsole, "memory", {
+  }), Object.defineProperty(consoleBox, "memory", {
     get: function() {
       return {};
     },
     configurable: !0
-  }), displayConsole;
+  }), consoleBox;
 }();

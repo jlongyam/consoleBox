@@ -343,7 +343,7 @@ function consolePrint(type, args, rawObj) {
   }
 }
 
-var input, displayConsole = {
+var input, consoleBox = {
   log: function() {
     consolePrint("log", arguments);
   },
@@ -623,11 +623,11 @@ var i_toggle = document.querySelector("#i_toggle"), console_box = document.getEl
 
 i_toggle.addEventListener("click", function() {
   console_box.classList.toggle("hide"), this.classList.toggle("hide");
-}), Object.defineProperty(displayConsole, "memory", {
+}), Object.defineProperty(consoleBox, "memory", {
   get: function() {
     return {};
   },
   configurable: !0
 });
 
-export { displayConsole as default };
+export { consoleBox as default };

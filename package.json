@@ -14,7 +14,7 @@
     "url": "git+https://github.com/jlongyam/consoleBox.git"
   },
   "homepage": "https://github.com/jlongyam/consoleBox",
-  "main": "./dist/es/displayConsole.js",
+  "main": "./dist/es/consoleBox.js",
   "type": "module",
   "devDependencies": {
     "@babel/preset-env": "^7.29.0",
@@ -26,9 +26,11 @@
     "typescript": "^5.9.3"
   },
   "scripts": {
-    "build": "rollup -c",
-    "assetic": "cp -r ./src/{icon,console.css,global.css,theme.css} ./dist",
-    "types": "tsc",
+    "_rollup": "rollup -c",
+    "_assetic": "cp -r ./src/{icon,console.css,global.css,theme.css} ./dist",
+    "_types": "tsc",
+    "build": "npm run _rollup && npm run _assetic && npm run _types",
+    "escheck": "repo escheck ./dist/iife/consoleBox.js",
     "changelog": "repo changelog",
     "prepare": "repo prepare"
   },
@@ -39,18 +41,18 @@
     "./dist",
     "./docs"
   ],
-  "types": "./types/displayConsole.d.ts",
+  "types": "./types/consoleBox.d.ts",
   "exports": {
     ".": {
-      "default": "./dist/es/displayConsole.js",
-      "import": "./dist/es/displayConsole.js",
-      "browser": "./dist/iife/displayConsole.js"
+      "default": "./dist/es/consoleBox.js",
+      "import": "./dist/es/consoleBox.js",
+      "browser": "./dist/iife/consoleBox.js"
     }
   },
   "publishConfig": {
     "access": "public"
   },
   "dependencies": {
-    "@jlongyam/repo": "^2.0.0"
+    "@jlongyam/repo": "^2.1.0"
   }
 }
