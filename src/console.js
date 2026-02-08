@@ -1,8 +1,3 @@
-// import env from '@jlongyam/env';
-// import envGlobal from '@jlongyam/env/global';
-// env.global = await import('@jlongyam/env/global');
-
-// if (env.browser) {
 function escapeHtml(text) {
   return text
     .replace(/&/g, '&amp;')
@@ -874,14 +869,4 @@ Object.defineProperty(consoleBox, "memory", {
   configurable: true,
 });
 
-export default consoleBox
-
-// env.global.defaultConsole = env.global.console
-// delete env.global.console;
-// env.global.console = consoleBox;
-
-/*
-;(function (global) {
-  
-})(window);
-*/
+export { consoleBox }

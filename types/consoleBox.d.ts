@@ -1,5 +1,4 @@
-export { consoleBox as default };
-declare namespace consoleBox {
+export namespace consoleBox {
     function log(...args: any[]): void;
     function info(...args: any[]): void;
     function warn(...args: any[]): void;

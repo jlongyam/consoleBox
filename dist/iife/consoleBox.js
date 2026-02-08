@@ -1,4 +1,4 @@
-var consoleBox = function() {
+var consoleBox = function(exports) {
   function _arrayLikeToArray(r, a) {
     (null == a || a > r.length) && (a = r.length);
     for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e];
@@ -611,5 +611,5 @@ var consoleBox = function() {
       return {};
     },
     configurable: !0
-  }), consoleBox;
-}();
+  }), exports.consoleBox = consoleBox, exports;
+}({});
