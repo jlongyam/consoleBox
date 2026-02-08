@@ -5,7 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+
+## [1.0.1] - 2026-02-08
+
+### Added
+
+- feature: Create static.yml - _jlongyam_
 
 ### Fixed
 
@@ -13,7 +18,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- chore: Rename displayConsole to consoleBox - _jlongyam_
 - documentation: Add initial CHANGELOG.md with first release notes - _jlongyam_
+
+### Other
+
+- 1.0.1 - _jlongyam_
+- Merge branch 'main' of https://github.com/jlongyam/consoleBox - _jlongyam_
 
 ## [1.0.0] - 2026-02-08
 
