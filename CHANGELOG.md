@@ -6,6 +6,27 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
+## [1.0.5] - 2026-02-08
+
+### Added
+
+- feature: add overflow auto to console sibling - _jlongyam_
+
+### Fixed
+
+- fix: layout overflow in split view - _jlongyam_
+- fix: change height from 100vh to 100% - _jlongyam_
+- fix: make console_box visible on mobile - _jlongyam_
+
+### Changed
+
+- documentation: Update CHANGELOG.md for version 1.0.4 - _jlongyam_
+
+### Other
+
+- 1.0.5 - _jlongyam_
+- **feat: update toggle rotation and CDN links** - _jlongyam_
+
 ## [1.0.4] - 2026-02-08
 
 ### Added
