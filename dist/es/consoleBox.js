@@ -630,4 +630,4 @@ i_toggle.addEventListener("click", function() {
   configurable: !0
 });
 
-export { consoleBox };
+export { consoleBox as default };

@@ -32,14 +32,15 @@
     "build": "npm run _rollup && npm run _assetic && npm run _types",
     "escheck": "repo escheck ./dist/iife/consoleBox.js",
     "changelog": "repo changelog",
-    "server": "web-dev-server -r ./docs"
+    "server": "web-dev-server"
   },
   "files": [
     "./README.md",
     "./LICENSE",
     "./types",
     "./dist",
-    "./docs"
+    "./index.html",
+    "./test"
   ],
   "types": "./types/consoleBox.d.ts",
   "exports": {

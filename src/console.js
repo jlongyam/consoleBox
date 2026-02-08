@@ -869,4 +869,4 @@ Object.defineProperty(consoleBox, "memory", {
   configurable: true,
 });
 
-export { consoleBox }
+export default consoleBox;

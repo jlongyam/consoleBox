@@ -1,19 +1,17 @@
 @import url("./theme.css");
-
 *,
 *::before,
 *::after {
   box-sizing: border-box;
 }
 html {
-  height: 100%;
+  height: 100vh;
 }
 body {
   margin: 0;
-  font-family: var(--ff-mono_fira);
   background: var(--bg-dark);
-  color: var(--fg-dark);
-  height: 100vh;
   width: 100vw;
-  overflow: hidden;
+  height: 100vh;
+  color: var(--fg-dark);
+  font-family: var(--ff-mono_fira);
 }
