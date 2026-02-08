@@ -15,6 +15,10 @@ window.console = consoleBox;
 window.console = window.defaultConsole;
 ```
 
+## CDN
+
+- <https://www.jsdelivr.com/package/gh/jlongyam/consoleBox>
+
 ## Roadmap
 
 - [ ] CTRL+Enter for multiline
