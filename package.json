@@ -1,5 +1,5 @@
 {
-  "name": "consolebox",
+  "name": "@jlongyam/consolebox",
   "version": "1.0.2",
   "description": "Dev Console in HTML",
   "keywords": [
@@ -50,7 +50,7 @@
   },
   "publishConfig": {
     "access": "public",
-    "registry": "https://npm.pkg.github.com"
+    "registry": "https://npm.pkg.github.com/"
   },
   "dependencies": {
     "@jlongyam/repo": "^2.1.0"
