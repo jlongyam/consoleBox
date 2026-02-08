@@ -1,16 +1,13 @@
+window.defaultConsole = window.console
+delete window.console;
+window.console = displayConsole;
+
 if(location.protocol === 'https') {
   let link_0 = document.querySelector('link');
   console.log(location.origin);
 }
 
-let container = document.querySelector('#container');
+let preview = document.querySelector('#preview');
 
-console.dirxml(container);
-console.dir({
-  one: "ONE",
-  two: {
-    a: "A",
-    b: "B"
-  },
-  three: [1,3,5]
-});
+console.dirxml(preview);
+console.dir(preview);

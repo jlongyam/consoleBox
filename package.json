@@ -2,7 +2,11 @@
   "name": "consolebox",
   "version": "1.0.0",
   "description": "Dev Console in HTML",
-  "keywords": ["console", "html", "playground"],
+  "keywords": [
+    "console",
+    "html",
+    "playground"
+  ],
   "author": "jlongyam",
   "license": "MIT",
   "repository": {
@@ -10,19 +14,43 @@
     "url": "git+https://github.com/jlongyam/consoleBox.git"
   },
   "homepage": "https://github.com/jlongyam/consoleBox",
-  "main": "index.js",
+  "main": "./dist/es/displayConsole.js",
   "type": "module",
   "devDependencies": {
-    "@jlongyam/repo": "^2.0.0"
+    "@babel/preset-env": "^7.29.0",
+    "@rollup/plugin-babel": "^6.1.0",
+    "@rollup/plugin-commonjs": "^29.0.0",
+    "@rollup/plugin-node-resolve": "^16.0.3",
+    "@rollup/plugin-terser": "^0.4.4",
+    "rollup": "^4.57.1",
+    "typescript": "^5.9.3"
   },
   "scripts": {
+    "build": "rollup -c",
+    "assetic": "cp -r ./src/{icon,console.css,global.css,theme.css} ./dist",
+    "types": "tsc",
     "changelog": "repo changelog",
     "prepare": "repo prepare"
   },
   "files": [
     "./README.md",
     "./LICENSE",
-    "./src",
+    "./types",
+    "./dist",
     "./docs"
-  ]
+  ],
+  "types": "./types/displayConsole.d.ts",
+  "exports": {
+    ".": {
+      "default": "./dist/es/displayConsole.js",
+      "import": "./dist/es/displayConsole.js",
+      "browser": "./dist/iife/displayConsole.js"
+    }
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "@jlongyam/repo": "^2.0.0"
+  }
 }

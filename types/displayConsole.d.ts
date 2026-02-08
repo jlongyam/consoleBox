@@ -1,0 +1,31 @@
+export { displayConsole as default };
+declare namespace displayConsole {
+    function log(...args: any[]): void;
+    function info(...args: any[]): void;
+    function warn(...args: any[]): void;
+    function error(...args: any[]): void;
+    function debug(...args: any[]): void;
+    function assert(condition: any, ...args: any[]): void;
+    function clear(): void;
+    function count(label: any): void;
+    function countReset(label: any): void;
+    function group(label: any): void;
+    function groupCollapsed(label: any): void;
+    function groupEnd(): void;
+    function time(label: any): void;
+    function exception(...args: any[]): void;
+    function markTimeline(): void;
+    function timeline(): void;
+    function timelineEnd(): void;
+    function timeStamp(label: any): void;
+    function context(): void;
+    let memory: {};
+    function timeEnd(label: any): void;
+    function timeLog(label: any): void;
+    function trace(): void;
+    function table(data: any, columns: any): any;
+    function dir(obj: any): void;
+    function dirxml(obj: any): void;
+    function profile(label: any): void;
+    function profileEnd(label: any): void;
+}
