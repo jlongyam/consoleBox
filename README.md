@@ -4,6 +4,17 @@ Dev Console in HTML
 
 Standard: <https://console.spec.whatwg.org/>
 
+## Usage
+
+```js
+window.defaultConsole = window.console
+delete window.console;
+// use
+window.console = consoleBox;
+// restore
+window.console = window.defaultConsole;
+```
+
 ## Roadmap
 
 - [ ] CTRL+Enter for multiline
