@@ -343,7 +343,7 @@ function consolePrint(type, args, rawObj) {
   }
 }
 
-var input, consoleBox = {
+var consoleBox = {
   log: function() {
     consolePrint("log", arguments);
   },
@@ -574,16 +574,18 @@ var input, consoleBox = {
   },
   profile: function(label) {},
   profileEnd: function(label) {}
-};
+}, console_box = document.getElementById("console_box");
 
-if (!document.getElementById("console_out")) {
-  var outDiv = document.createElement("div");
-  outDiv.id = "console_out", document.body.appendChild(outDiv);
+if (!console_box) {
+  var fragment = document.createDocumentFragment(), elTemp = document.createElement("div");
+  elTemp.innerHTML = '\n    <div id="console_box">\n      <div id="console_output">\n        <div id="console_out"></div>\n      </div>\n      <div id="console_input">\n        <input id="console_in" type="text" autocomplete="off" placeholder="Code ...">\n      </div>\n    </div>\n  ';
+  var comp = elTemp.firstElementChild;
+  fragment.appendChild(comp), document.body.appendChild(fragment);
 }
 
-if (document.getElementById("console_in") || ((input = document.createElement("input")).id = "console_in", 
-input.type = "text", input.autocomplete = "off", input.placeholder = "Type JavaScript and press Enter...", 
-document.body.appendChild(input)), input = document.getElementById("console_in")) {
+var input = document.getElementById("console_in");
+
+if (input) {
   var history = [], historyIndex = -1, tempInput = "";
   input.addEventListener("keydown", function(e) {
     if ("Enter" === e.key) {
@@ -619,9 +621,9 @@ out && new MutationObserver(function() {
   childList: !0
 });
 
-var i_toggle = document.querySelector("#i_toggle"), console_box = document.getElementById("console_box");
+var i_toggle = document.querySelector("#i_toggle");
 
-i_toggle.addEventListener("click", function() {
+i_toggle && i_toggle.addEventListener("click", function() {
   console_box.classList.toggle("hide"), this.classList.toggle("hide");
 }), Object.defineProperty(consoleBox, "memory", {
   get: function() {

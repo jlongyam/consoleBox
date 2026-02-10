@@ -776,18 +776,24 @@ var consoleBox = {
   profile: function (label) { },
   profileEnd: function (label) { },
 };
-if (!document.getElementById("console_out")) {
-  var outDiv = document.createElement("div");
-  outDiv.id = "console_out";
-  document.body.appendChild(outDiv);
-}
-if (!document.getElementById("console_in")) {
-  var input = document.createElement("input");
-  input.id = "console_in";
-  input.type = "text";
-  input.autocomplete = "off";
-  input.placeholder = "Type JavaScript and press Enter...";
-  document.body.appendChild(input);
+var console_box = document.getElementById('console_box');
+if(!console_box) {
+  let fragment = document.createDocumentFragment();
+  let textHtml = `
+    <div id="console_box">
+      <div id="console_output">
+        <div id="console_out"></div>
+      </div>
+      <div id="console_input">
+        <input id="console_in" type="text" autocomplete="off" placeholder="Code ...">
+      </div>
+    </div>
+  `
+  let elTemp = document.createElement('div');
+  elTemp.innerHTML = textHtml;
+  let comp = elTemp.firstElementChild;
+  fragment.appendChild(comp)
+  document.body.appendChild(fragment);
 }
 var input = document.getElementById("console_in");
 if (input) {
@@ -857,11 +863,12 @@ if (out) {
   observer.observe(out, { childList: true });
 }
 let i_toggle = document.querySelector('#i_toggle');
-let console_box = document.getElementById('console_box');
-i_toggle.addEventListener('click', function () {
-  console_box.classList.toggle('hide');
-  this.classList.toggle('hide');
-});
+if(i_toggle) {
+  i_toggle.addEventListener('click', function () {
+    console_box.classList.toggle('hide');
+    this.classList.toggle('hide');
+  });
+}
 Object.defineProperty(consoleBox, "memory", {
   get: function () {
     return {};
