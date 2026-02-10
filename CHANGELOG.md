@@ -6,6 +6,27 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
+## [1.0.6] - 2026-02-10
+
+### Added
+
+- feature: Add blank test page - _jlongyam_
+
+### Fixed
+
+- fix: add @latest CDN to test - _jlongyam_
+- fix: add specific CDN version to test - _jlongyam_
+
+### Changed
+
+- documentation: add CDN badge - _jlongyam_
+- documentation: add CDN link - _jlongyam_
+- documentation: update changelog - _jlongyam_
+
+### Other
+
+- 1.0.6 - _jlongyam_
+
 ## [1.0.5] - 2026-02-08
 
 ### Added
