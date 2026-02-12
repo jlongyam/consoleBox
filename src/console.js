@@ -198,7 +198,7 @@ function createGroup(label, isCollapsed) {
   toggle.textContent = isCollapsed ? "▶" : "▼";
   var labelSpan = document.createElement("span");
   labelSpan.className = "console-group-label";
-  labelSpan.textContent = label;
+  labelSpan.innerHTML = ansiToHtml(label);
   groupHeader.appendChild(toggle);
   if (label) {
     groupHeader.appendChild(labelSpan);

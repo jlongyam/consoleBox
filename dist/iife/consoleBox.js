@@ -209,8 +209,8 @@ var consoleBox = function() {
       var toggle = document.createElement("span");
       toggle.className = "dir-toggle", toggle.textContent = isCollapsed ? "▶" : "▼";
       var labelSpan = document.createElement("span");
-      labelSpan.className = "console-group-label", labelSpan.textContent = label, groupHeader.appendChild(toggle), 
-      label && groupHeader.appendChild(labelSpan);
+      labelSpan.className = "console-group-label", labelSpan.textContent = ansiToHtml(label), 
+      groupHeader.appendChild(toggle), label && groupHeader.appendChild(labelSpan);
       var contentDiv = document.createElement("div");
       contentDiv.className = "console-group-content", isCollapsed && contentDiv.classList.add("dir-hidden"), 
       toggle.addEventListener("click", doToggle), toggle.addEventListener("touchstart", function(e) {
