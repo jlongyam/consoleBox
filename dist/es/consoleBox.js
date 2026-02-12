@@ -216,7 +216,7 @@ function createGroup(label, isCollapsed) {
     var toggle = document.createElement("span");
     toggle.className = "dir-toggle", toggle.textContent = isCollapsed ? "▶" : "▼";
     var labelSpan = document.createElement("span");
-    labelSpan.className = "console-group-label", labelSpan.textContent = ansiToHtml(label), 
+    labelSpan.className = "console-group-label", labelSpan.innerHTML = ansiToHtml(label), 
     groupHeader.appendChild(toggle), label && groupHeader.appendChild(labelSpan);
     var contentDiv = document.createElement("div");
     contentDiv.className = "console-group-content", isCollapsed && contentDiv.classList.add("dir-hidden"), 
