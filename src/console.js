@@ -785,7 +785,7 @@ if(!console_box) {
         <div id="console_out"></div>
       </div>
       <div id="console_input">
-        <input id="console_in" type="text" autocomplete="off" placeholder="Code ...">
+        <input id="console_in" type="text" autocapitalize="none" autocomplete="off" placeholder="Code ...">
       </div>
     </div>
   `
