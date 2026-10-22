@@ -1,3 +1,5 @@
+import ansiToHtml from "./ansi-html.js";
+
 function escapeHtml(text) {
   return text
     .replace(/&/g, '&amp;')
@@ -7,6 +9,7 @@ function escapeHtml(text) {
     .replace(/'/g, '&#39;')
     ;
 }
+/*
 function ansiToHtml(text) {
   const ansiMap = {
     '30': 'color: black',
@@ -69,6 +72,7 @@ function ansiToHtml(text) {
   }
   return html;
 }
+  */
 function formatArgs(args) {
   if (!args.length) return { formatted: [], styles: [] };
   var first = args[0];
