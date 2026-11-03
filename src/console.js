@@ -1,14 +1,14 @@
 import ansiToHtml from "./ansi-html.js";
 
-function escapeHtml(text) {
-  return text
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#39;')
-    ;
-}
+// function escapeHtml(text) {
+//   return text
+//     .replace(/&/g, '&amp;')
+//     .replace(/</g, '&lt;')
+//     .replace(/>/g, '&gt;')
+//     .replace(/"/g, '&quot;')
+//     .replace(/'/g, '&#39;')
+//     ;
+// }
 /*
 function ansiToHtml(text) {
   const ansiMap = {

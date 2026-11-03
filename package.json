@@ -1,48 +1,20 @@
 {
-  "name": "@jlongyam/consolebox",
-  "version": "1.0.10",
+  "name": "@jlbyte/consolebox",
+  "version": "1.0.0",
   "description": "Dev Console in HTML",
   "keywords": [
     "console",
-    "html",
-    "playground"
+    "console-html",
+    "console-playground",
+    "console-app"
   ],
   "author": "jlongyam",
   "license": "MIT",
   "repository": {
-    "type": "git",
-    "url": "git+https://github.com/jlongyam/consoleBox.git"
+    "url": "https://github.com/jlongyam/consoleBox"
   },
-  "homepage": "https://github.com/jlongyam/consoleBox",
+  "homepage": "https://jlongyam.github.io/consoleBox/",
   "main": "./dist/es/consoleBox.js",
-  "type": "module",
-  "devDependencies": {
-    "@babel/preset-env": "^7.29.0",
-    "@rollup/plugin-babel": "^6.1.0",
-    "@rollup/plugin-commonjs": "^29.0.0",
-    "@rollup/plugin-node-resolve": "^16.0.3",
-    "@rollup/plugin-terser": "^0.4.4",
-    "rollup": "^4.57.1",
-    "typescript": "^5.9.3"
-  },
-  "scripts": {
-    "_rollup": "rollup -c",
-    "_assetic": "cp -r ./src/{icon,console.css,global.css,theme.css} ./dist",
-    "_types": "tsc",
-    "build": "npm run _rollup && npm run _assetic && npm run _types",
-    "escheck": "repo escheck ./dist/iife/consoleBox.js",
-    "changelog": "repo changelog",
-    "server": "web-dev-server"
-  },
-  "files": [
-    "./README.md",
-    "./LICENSE",
-    "./types",
-    "./dist",
-    "./index.html",
-    "./test"
-  ],
-  "types": "./types/consoleBox.d.ts",
   "exports": {
     ".": {
       "default": "./dist/es/consoleBox.js",
@@ -50,12 +22,11 @@
       "browser": "./dist/iife/consoleBox.js"
     }
   },
+  "files": [
+    "./README.md",
+    "./LICENSE"
+  ],
   "publishConfig": {
-    "access": "public",
-    "registry": "https://npm.pkg.github.com/"
-  },
-  "dependencies": {
-    "@jlongyam/repo": "^2.1.0",
-    "@web/dev-server": "^0.4.6"
+    "access": "public"
   }
 }
