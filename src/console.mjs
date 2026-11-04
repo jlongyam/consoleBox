@@ -1,78 +1,94 @@
-import ansiToHtml from "./ansi-html.js";
+import { html as ansiToHtml } from "@jlbyte/ansi";
 
-// function escapeHtml(text) {
-//   return text
-//     .replace(/&/g, '&amp;')
-//     .replace(/</g, '&lt;')
-//     .replace(/>/g, '&gt;')
-//     .replace(/"/g, '&quot;')
-//     .replace(/'/g, '&#39;')
-//     ;
-// }
-/*
-function ansiToHtml(text) {
-  const ansiMap = {
-    '30': 'color: black',
-    '31': 'color: #ef476f',
-    '32': 'color: #06d6a0',
-    '33': 'color: #ffd166',
-    '34': 'color: #118ab2',
-    '35': 'color: #8338ec',
-    '36': 'color: #00b4d8',
-    '37': 'color: white',
-    '40': 'background-color: black',
-    '41': 'background-color: #ef476f',
-    '42': 'background-color: #06d6a0',
-    '43': 'background-color: #ffd166',
-    '44': 'background-color: #118ab2',
-    '45': 'background-color: #8338ec',
-    '46': 'background-color: #00b4d8',
-    '47': 'background-color: white',
-    '90': 'color: rgb(85,85,85)',
-    '91': 'color: rgb(255,85,85)',
-    '92': 'color: rgb(85,255,85)',
-    '93': 'color: rgb(255,255,85)',
-    '94': 'color: rgb(85,85,255)',
-    '95': 'color: rgb(255,85,255)',
-    '96': 'color: rgb(85,255,255)',
-    '97': 'color: rgb(255,255,255)',
-    '1': 'font-weight: bold',
-    '3': 'font-style: italic',
-    '4': 'text-decoration: underline',
-    '7': 'filter: invert(100%)',
-    '9': 'text-decoration: line-through',
-    '0': 'all: initial'
-  };
-  const ansiRegex = /\x1b\[([0-9;]*)m/g;
-  let html = '';
-  let stack = [];
-  let lastIndex = 0;
-  let match;
-  while ((match = ansiRegex.exec(text)) !== null) {
-    html += escapeHtml(text.slice(lastIndex, match.index));
-    const codes = match[1].split(';').filter(code => code !== '');
-    if (codes.length === 0) codes.push('0');
-    for (const code of codes) {
-      if (code === '0') {
-        while (stack.length > 0) {
-          html += '</span>';
-          stack.pop();
-        }
-      } else if (ansiMap[code]) {
-        html += `<span style="${ansiMap[code]}">`;
-        stack.push(code);
-      }
-    }
-    lastIndex = match.index + match[0].length;
-  }
-  html += escapeHtml(text.slice(lastIndex));
-  while (stack.length > 0) {
-    html += '</span>';
-    stack.pop();
-  }
-  return html;
+// Initial
+const console_box = document.getElementById('console_box');
+if(!console_box) {
+  let fragment = document.createDocumentFragment();
+  let textHtml = `
+    <div id="console_box">
+      <div id="console_output">
+        <div id="console_out"></div>
+      </div>
+      <div id="console_input">
+        <input id="console_in" type="text" autocapitalize="none" autocomplete="off" placeholder="Code ...">
+      </div>
+    </div>
+  `
+  let elTemp = document.createElement('div');
+  elTemp.innerHTML = textHtml;
+  let comp = elTemp.firstElementChild;
+  fragment.appendChild(comp)
+  document.body.appendChild(fragment);
 }
-  */
+const input = document.getElementById("console_in");
+if (input) {
+  var history = [];
+  var historyIndex = -1;
+  var tempInput = "";
+  input.addEventListener("keydown", function (e) {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      var code = input.value;
+      if (code.trim() !== "") {
+        if (history.length === 0 || history[history.length - 1] !== code) {
+          history.push(code);
+        }
+      }
+      historyIndex = history.length;
+      input.value = "";
+      tempInput = "";
+      try {
+        var result = new Function('return ' + code)();
+        if (result !== undefined) {
+          console.log(result);
+        }
+      } catch (err) {
+        if (err instanceof SyntaxError) {
+          try {
+            new Function(code)();
+          } catch (e) {
+            console.error(e);
+          }
+        } else {
+          console.error(err);
+        }
+      }
+    } else if (e.key === "ArrowUp") {
+      if (history.length > 0 && historyIndex > 0) {
+        if (historyIndex === history.length) tempInput = input.value;
+        historyIndex--;
+        input.value = history[historyIndex];
+        setTimeout(function () {
+          input.setSelectionRange(input.value.length, input.value.length);
+        }, 0);
+      }
+      e.preventDefault();
+    } else if (e.key === "ArrowDown") {
+      if (history.length > 0 && historyIndex < history.length) {
+        historyIndex++;
+        if (historyIndex === history.length) {
+          input.value = tempInput;
+        } else {
+          input.value = history[historyIndex];
+        }
+        setTimeout(function () {
+          input.setSelectionRange(input.value.length, input.value.length);
+        }, 0);
+      }
+      e.preventDefault();
+    }
+  });
+  input.focus();
+}
+const out = document.getElementById("console_out");
+if (out) {
+  var observer = new MutationObserver(function () {
+    out.scrollTop = out.scrollHeight;
+  });
+  observer.observe(out, { childList: true });
+}
+
+// Function
 function formatArgs(args) {
   if (!args.length) return { formatted: [], styles: [] };
   var first = args[0];
@@ -325,7 +341,11 @@ function renderTreeEntry(key, val, depth) {
     keySpan.textContent = key + ": ";
     var valSpan = document.createElement("span");
     valSpan.className = "dir-value";
-    valSpan.textContent = String(val);
+    let val_ = String(val);
+    if(typeof val === 'function') {
+      val_ = val_.substring(0, val_.indexOf('{')).replace('function', 'f');
+    }
+    valSpan.textContent = val_;
     entry.appendChild(keySpan);
     entry.appendChild(valSpan);
   }
@@ -439,7 +459,9 @@ function consolePrint(type, args, rawObj) {
   }
   targetContainer.appendChild(div);
 }
-var consoleBox = {
+
+// Build
+const consoleBox = {
   log: function () {
     consolePrint("log", arguments);
   },
@@ -780,104 +802,5 @@ var consoleBox = {
   profile: function (label) { },
   profileEnd: function (label) { },
 };
-var console_box = document.getElementById('console_box');
-if(!console_box) {
-  let fragment = document.createDocumentFragment();
-  let textHtml = `
-    <div id="console_box">
-      <div id="console_output">
-        <div id="console_out"></div>
-      </div>
-      <div id="console_input">
-        <input id="console_in" type="text" autocapitalize="none" autocomplete="off" placeholder="Code ...">
-      </div>
-    </div>
-  `
-  let elTemp = document.createElement('div');
-  elTemp.innerHTML = textHtml;
-  let comp = elTemp.firstElementChild;
-  fragment.appendChild(comp)
-  document.body.appendChild(fragment);
-}
-var input = document.getElementById("console_in");
-if (input) {
-  var history = [];
-  var historyIndex = -1;
-  var tempInput = "";
-  input.addEventListener("keydown", function (e) {
-    if (e.key === "Enter") {
-      e.preventDefault();
-      var code = input.value;
-      if (code.trim() !== "") {
-        if (history.length === 0 || history[history.length - 1] !== code) {
-          history.push(code);
-        }
-      }
-      historyIndex = history.length;
-      input.value = "";
-      tempInput = "";
-      try {
-        var result = new Function('return ' + code)();
-        if (result !== undefined) {
-          console.log(result);
-        }
-      } catch (err) {
-        if (err instanceof SyntaxError) {
-          try {
-            new Function(code)();
-          } catch (e) {
-            console.error(e);
-          }
-        } else {
-          console.error(err);
-        }
-      }
-    } else if (e.key === "ArrowUp") {
-      if (history.length > 0 && historyIndex > 0) {
-        if (historyIndex === history.length) tempInput = input.value;
-        historyIndex--;
-        input.value = history[historyIndex];
-        setTimeout(function () {
-          input.setSelectionRange(input.value.length, input.value.length);
-        }, 0);
-      }
-      e.preventDefault();
-    } else if (e.key === "ArrowDown") {
-      if (history.length > 0 && historyIndex < history.length) {
-        historyIndex++;
-        if (historyIndex === history.length) {
-          input.value = tempInput;
-        } else {
-          input.value = history[historyIndex];
-        }
-        setTimeout(function () {
-          input.setSelectionRange(input.value.length, input.value.length);
-        }, 0);
-      }
-      e.preventDefault();
-    }
-  });
-  input.focus();
-}
-var out = document.getElementById("console_out");
-if (out) {
-  var observer = new MutationObserver(function () {
-    out.scrollTop = out.scrollHeight;
-  });
-  observer.observe(out, { childList: true });
-}
-let i_toggle = document.querySelector('#i_toggle');
-if(i_toggle) {
-  i_toggle.addEventListener('click', function () {
-    console_box.classList.toggle('hide');
-    this.classList.toggle('hide');
-  });
-}
-Object.defineProperty(consoleBox, "memory", {
-  get: function () {
-    return {};
-  },
-  configurable: true,
-});
 
 export default consoleBox;

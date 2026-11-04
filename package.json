@@ -10,16 +10,22 @@
   ],
   "author": "jlongyam",
   "license": "MIT",
-  "repository": {
-    "url": "https://github.com/jlongyam/consoleBox"
-  },
+  "repository": "https://github.com/jlongyam/consoleBox",
   "homepage": "https://jlongyam.github.io/consoleBox/",
-  "main": "./dist/es/consoleBox.js",
+  "devDependencies": {
+    "@jlbyte/js": "^1.0.2"
+  },
+  "dependencies": {
+    "@jlbyte/ansi": "^1.2.3"
+  },
+  "main": "dist/console.cjs",
+  "module": "dist/console.mjs",
+  "jsdelivr": "dist/console.js",
   "exports": {
     ".": {
-      "default": "./dist/es/consoleBox.js",
-      "import": "./dist/es/consoleBox.js",
-      "browser": "./dist/iife/consoleBox.js"
+      "types": "./dist/console.d.mts",
+      "import": "./dist/console.mjs",
+      "require": "./dist/console.cjs"
     }
   },
   "files": [
@@ -28,5 +34,8 @@
   ],
   "publishConfig": {
     "access": "public"
+  },
+  "scripts": {
+    "build": "js build ./src/console.mjs ./dist -p ./package.json -f es,cjs,iife -e @jlbyte/ansi -a ./src/console.css"
   }
 }
