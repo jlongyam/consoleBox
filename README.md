@@ -41,7 +41,7 @@ Skeleton:
 Programatic:
 
 ```js
-window.console = consoleBox(PARENT_NODE);
+consoleBox(PARENT_NODE);
 ```
 
 ### JS
