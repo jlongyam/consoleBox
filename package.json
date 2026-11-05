@@ -13,9 +13,7 @@
   "repository": "https://github.com/jlongyam/consoleBox",
   "homepage": "https://jlongyam.github.io/consoleBox/",
   "devDependencies": {
-    "@jlbyte/js": "^1.0.2"
-  },
-  "dependencies": {
+    "@jlbyte/js": "^1.0.2",
     "@jlbyte/ansi": "^1.2.3"
   },
   "main": "dist/console.cjs",

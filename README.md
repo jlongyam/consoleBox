@@ -4,7 +4,13 @@
 
 Dev Console in HTML
 
-Standard: <https://console.spec.whatwg.org/>
+## Features
+
+- zero dependency
+- using [standard](https://console.spec.whatwg.org/)
+- adapt to parent
+- console style
+- ANSI escape friendly
 
 ## Usage
 
@@ -14,6 +20,8 @@ Standard: <https://console.spec.whatwg.org/>
 - container should have specific `height`
 - if no consoleBox skeleton it will use `body`
 - consoleBox skeleton is `absolute` cover style
+
+Skeleton:
 
 ```html
 <div id="any_relative_container">
@@ -29,6 +37,12 @@ Standard: <https://console.spec.whatwg.org/>
 </div>
 ```
 
+Programatic:
+
+```js
+window.console = consoleBox(PARENT_NODE);
+```
+
 ### JS
 
 Basic
@@ -37,7 +51,7 @@ Basic
 consoleBox.log('Todo');
 ```
 
-Override dev console
+Overriding
 
 ```js
 window.defaultConsole = window.console
@@ -51,13 +65,19 @@ window.console = window.defaultConsole;
 ## Roadmap
 
 - [x] console.[log,info,warn,debug,error]
-- [x] console.dir{xml}
-- [x] console.group{End|Collapse}
+- [x] console.dir[xml]
+- [x] console.group[End|Collapse]
 - [x] console.table
-- [x] console.time{End}
-- [x] console.count{Reset}
+- [x] console.time[End|log|stamp|line[End]]
+- [x] console.count[Reset]
 - [x] console.trace
+- [x] console.memory
+- [x] console.profile[End]
 - [x] console.clear
+- [ ] console.context
+- [ ] console.createTask
+- [x] console.markTimeline +
+- [x] console.exception +
 - [ ] CTRL+Enter for multiline
 - [ ] remember variable
 
