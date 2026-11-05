@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>test:  console.dir</title>
+  <style>
+    @import '../../dist/console.css';
+    #container {
+      position: relative;
+      height: 300px;
+      border: 2px solid blue;
+    }
+  </style>
+  <script type="module">
+    import consoleBox from '../../dist/console.mjs';
+    window.defaultConsole = window.console
+    delete window.console;
+    window.console = consoleBox();
+  </script>
+</head>
+<body>
+  <script type="module">
+    console.dir(String.prototype)
+    console.dirxml(document.body);
+  </script>
+</body>
+</html>

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>test: console.time[End]</title>
+  <style>
+    @import '../../dist/console.css';
+    html { height: 100%; }
+    body {
+      position: relative;
+      height: 100%;
+      margin: 0;
+    }
+  </style>
+  <script type="module">
+    import consoleBox from '../../dist/console.mjs';
+    window.defaultConsole = window.console
+    delete window.console;
+    window.console = consoleBox();
+  </script>
+</head>
+<body>
+  <script type="module">
+    const first = () => { second(); };
+    const second = () => { third(); };
+    const third = () => { fourth(); };
+    const fourth = () => { console.trace(); };
+    first();
+  </script>
+</body>
+</html>

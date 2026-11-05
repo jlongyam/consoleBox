@@ -3,27 +3,23 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>test: layout</title>
-  <script type="importmap">
-    {
-      "imports": {
-        "@jlbyte/ansi": "https://cdn.jsdelivr.net/npm/@jlbyte/ansi@1.2.3/+esm"
-      }
-    }
-  </script>
+  <title>test:  container - programatic</title>
   <style>
-    @import '../src/console.css';
-    body {
+    @import '../../dist/console.css';
+    #container {
       position: relative;
       height: 300px;
-      border: 2px solid red;
+      border: 2px solid orange;
     }
   </style>
   <script type="module">
-    import consoleBox from '../src/console.mjs';
+    import consoleBox from '../../dist/console.mjs';
     window.defaultConsole = window.console
     delete window.console;
-    window.console = consoleBox;
+    let parent = document.createElement('div');
+    parent.id = 'container';
+    document.body.appendChild(parent)
+    window.console = consoleBox(parent);
   </script>
 </head>
 <body>

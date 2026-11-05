@@ -29,13 +29,14 @@
     }
   },
   "files": [
-    "./README.md",
-    "./LICENSE"
+    "README.md",
+    "LICENSE",
+    "dist/"
   ],
   "publishConfig": {
     "access": "public"
   },
   "scripts": {
-    "build": "js build ./src/console.mjs ./dist -p ./package.json -f es,cjs,iife -e @jlbyte/ansi -a ./src/console.css"
+    "build": "js build ./src/console.mjs ./dist -p ./package.json -f es,cjs,iife -a ./src/console.css"
   }
 }

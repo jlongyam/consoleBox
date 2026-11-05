@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>test:  container - skeleton</title>
+  <style>
+    @import '../../dist/console.css';
+    #container {
+      position: relative;
+      height: 300px;
+      border: 2px solid blue;
+    }
+  </style>
+  <script type="module">
+    import consoleBox from '../../dist/console.mjs';
+    window.defaultConsole = window.console
+    delete window.console;
+    window.console = consoleBox();
+  </script>
+</head>
+<body>
+  <div id="container">
+    <div id="console_box">
+      <div id="console_output">
+        <div id="console_out"></div>
+      </div>
+      <div id="console_input">
+        <input id="console_in" type="text" autocapitalize="none" autocomplete="off" placeholder="console ready">
+      </div>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>test:  console.count</title>
+  <style>
+    @import '../../dist/console.css';
+    #container {
+      position: relative;
+      height: 300px;
+      border: 2px solid blue;
+    }
+  </style>
+  <script type="module">
+    import consoleBox from '../../dist/console.mjs';
+    window.defaultConsole = window.console
+    delete window.console;
+    window.console = consoleBox();
+  </script>
+</head>
+<body>
+  <script type="module">
+    console.count();
+    console.count('coffee');
+    console.count('coffee');
+    console.count();
+    console.count();
+    console.countReset();
+    console.countReset('coffee');
+    console.count('coffee');
+    console.count('coffee');
+    console.count();
+    console.count();
+  </script>
+</body>
+</html>

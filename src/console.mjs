@@ -1,92 +1,13 @@
 import { html as ansiToHtml } from "@jlbyte/ansi";
 
-// Initial
-const console_box = document.getElementById('console_box');
-if(!console_box) {
-  let fragment = document.createDocumentFragment();
-  let textHtml = `
-    <div id="console_box">
-      <div id="console_output">
-        <div id="console_out"></div>
-      </div>
-      <div id="console_input">
-        <input id="console_in" type="text" autocapitalize="none" autocomplete="off" placeholder="Code ...">
-      </div>
-    </div>
-  `
-  let elTemp = document.createElement('div');
-  elTemp.innerHTML = textHtml;
-  let comp = elTemp.firstElementChild;
-  fragment.appendChild(comp)
-  document.body.appendChild(fragment);
-}
-const input = document.getElementById("console_in");
-if (input) {
-  var history = [];
-  var historyIndex = -1;
-  var tempInput = "";
-  input.addEventListener("keydown", function (e) {
-    if (e.key === "Enter") {
-      e.preventDefault();
-      var code = input.value;
-      if (code.trim() !== "") {
-        if (history.length === 0 || history[history.length - 1] !== code) {
-          history.push(code);
-        }
-      }
-      historyIndex = history.length;
-      input.value = "";
-      tempInput = "";
-      try {
-        var result = new Function('return ' + code)();
-        if (result !== undefined) {
-          console.log(result);
-        }
-      } catch (err) {
-        if (err instanceof SyntaxError) {
-          try {
-            new Function(code)();
-          } catch (e) {
-            console.error(e);
-          }
-        } else {
-          console.error(err);
-        }
-      }
-    } else if (e.key === "ArrowUp") {
-      if (history.length > 0 && historyIndex > 0) {
-        if (historyIndex === history.length) tempInput = input.value;
-        historyIndex--;
-        input.value = history[historyIndex];
-        setTimeout(function () {
-          input.setSelectionRange(input.value.length, input.value.length);
-        }, 0);
-      }
-      e.preventDefault();
-    } else if (e.key === "ArrowDown") {
-      if (history.length > 0 && historyIndex < history.length) {
-        historyIndex++;
-        if (historyIndex === history.length) {
-          input.value = tempInput;
-        } else {
-          input.value = history[historyIndex];
-        }
-        setTimeout(function () {
-          input.setSelectionRange(input.value.length, input.value.length);
-        }, 0);
-      }
-      e.preventDefault();
-    }
-  });
-  input.focus();
-}
-const out = document.getElementById("console_out");
-if (out) {
-  var observer = new MutationObserver(function () {
-    out.scrollTop = out.scrollHeight;
-  });
-  observer.observe(out, { childList: true });
-}
+let
+  $ = document,
+  timers = {},
+  counts = {},
+  indentLevel = 0,
+  indentString = "  ",
+  groupStack = []
+;
 
 // Function
 function formatArgs(args) {
@@ -104,12 +25,12 @@ function formatArgs(args) {
     while ((match = pattern.exec(str)) !== null) {
       if (match.index > lastIndex) {
         nodes.push(
-          document.createTextNode(str.slice(lastIndex, match.index)),
+          $.createTextNode(str.slice(lastIndex, match.index)),
         );
       }
       var type = match[1];
       if (type === "%") {
-        nodes.push(document.createTextNode("%"));
+        nodes.push($.createTextNode("%"));
       } else if (type === "c") {
         styles.push(rest[i++] || "");
       } else {
@@ -119,10 +40,10 @@ function formatArgs(args) {
       lastIndex = match.index + match[0].length;
     }
     if (lastIndex < str.length) {
-      nodes.push(document.createTextNode(str.slice(lastIndex)));
+      nodes.push($.createTextNode(str.slice(lastIndex)));
     }
     for (; i < rest.length; i++) {
-      nodes.push(document.createTextNode(" "));
+      nodes.push($.createTextNode(" "));
       nodes.push(formatSingleArg(rest[i]));
     }
     return { formatted: nodes, styles };
@@ -156,12 +77,12 @@ function getTypeClass(arg) {
   }
 }
 function formatSingleArg(arg) {
-  var span = document.createElement("span");
+  var span = $.createElement("span");
   var typeClass = getTypeClass(arg);
   span.className = typeClass;
   if (typeClass === "js-string") {
     if (typeof arg === 'string' && arg.includes('\x1b[')) {
-      const tempDiv = document.createElement('div');
+      const tempDiv = $.createElement('div');
       tempDiv.innerHTML = ansiToHtml(arg);
       while (tempDiv.firstChild) {
         span.appendChild(tempDiv.firstChild);
@@ -196,34 +117,29 @@ function formatSingleArg(arg) {
   }
   return span;
 }
-var timers = {};
-var counts = {};
-var indentLevel = 0;
-var indentString = "  ";
-var groupStack = [];
 function createGroup(label, isCollapsed) {
-  var out = document.getElementById("console_out");
+  var out = $.getElementById("console_out");
   if (!out) return;
   var targetContainer = out;
   if (groupStack.length > 0) {
     var currentGroup = groupStack[groupStack.length - 1];
     targetContainer = currentGroup.contentDiv;
   }
-  var groupWrapper = document.createElement("div");
+  var groupWrapper = $.createElement("div");
   groupWrapper.className = "console-group";
-  var groupHeader = document.createElement("div");
+  var groupHeader = $.createElement("div");
   groupHeader.className = "console-group-header";
-  var toggle = document.createElement("span");
+  var toggle = $.createElement("span");
   toggle.className = "dir-toggle";
-  toggle.textContent = isCollapsed ? "▶" : "▼";
-  var labelSpan = document.createElement("span");
+  toggle.textContent = isCollapsed ? "▸" : "▾";
+  var labelSpan = $.createElement("span");
   labelSpan.className = "console-group-label";
   labelSpan.innerHTML = ansiToHtml(label);
   groupHeader.appendChild(toggle);
   if (label) {
     groupHeader.appendChild(labelSpan);
   }
-  var contentDiv = document.createElement("div");
+  var contentDiv = $.createElement("div");
   contentDiv.className = "console-group-content";
   if (isCollapsed) {
     contentDiv.classList.add("dir-hidden");
@@ -233,11 +149,11 @@ function createGroup(label, isCollapsed) {
     if (contentDiv.classList.contains("dir-hidden")) {
       contentDiv.classList.remove("dir-hidden");
       contentDiv.classList.add("dir-expanded");
-      toggle.textContent = "▼";
+      toggle.textContent = "▾";
     } else {
       contentDiv.classList.add("dir-hidden");
       contentDiv.classList.remove("dir-expanded");
-      toggle.textContent = "▶";
+      toggle.textContent = "▸";
     }
   }
   toggle.addEventListener("click", doToggle);
@@ -262,7 +178,7 @@ function isExpandable(val) {
 }
 function renderTree(obj, depth) {
   depth = depth || 0;
-  var container = document.createElement("div");
+  var container = $.createElement("div");
   container.className = "dir-tree dir-indent-" + Math.min(depth, 9);
   if (typeof obj === "object" && obj !== null) {
     var keys = Object.getOwnPropertyNames(obj);
@@ -282,7 +198,7 @@ function renderTree(obj, depth) {
       container.appendChild(item);
     }
   } else {
-    var valSpan = document.createElement("span");
+    var valSpan = $.createElement("span");
     valSpan.className = "dir-value";
     valSpan.textContent = String(obj);
     container.appendChild(valSpan);
@@ -290,18 +206,18 @@ function renderTree(obj, depth) {
   return container;
 }
 function renderTreeEntry(key, val, depth) {
-  var entry = document.createElement("div");
+  var entry = $.createElement("div");
   entry.className = "dir-tree-entry dir-indent-" + Math.min(depth, 9);
   if (isExpandable(val)) {
-    var collapsedLine = document.createElement("div");
+    var collapsedLine = $.createElement("div");
     collapsedLine.className = "dir-collapsed-line";
-    var toggle = document.createElement("span");
+    var toggle = $.createElement("span");
     toggle.className = "dir-toggle";
-    toggle.textContent = "▶";
-    var keySpan = document.createElement("span");
+    toggle.textContent = "▸";
+    var keySpan = $.createElement("span");
     keySpan.className = "dir-key";
     keySpan.textContent = key + ": ";
-    var typeSpan = document.createElement("span");
+    var typeSpan = $.createElement("span");
     typeSpan.className = "dir-type";
     typeSpan.textContent = Array.isArray(val) && Object.getPrototypeOf(val) !== Object.prototype
       ? "Array(" + val.length + ")"
@@ -318,15 +234,15 @@ function renderTreeEntry(key, val, depth) {
         expanded = renderTree(val, depth + 1);
         expanded.classList.add("dir-expanded");
         entry.appendChild(expanded);
-        toggle.textContent = "▼";
+        toggle.textContent = "▾";
       } else if (expanded.classList.contains("dir-hidden")) {
         expanded.classList.remove("dir-hidden");
         expanded.classList.add("dir-expanded");
-        toggle.textContent = "▼";
+        toggle.textContent = "▾";
       } else {
         expanded.classList.add("dir-hidden");
         expanded.classList.remove("dir-expanded");
-        toggle.textContent = "▶";
+        toggle.textContent = "▸";
       }
     }
     toggle.addEventListener("click", doToggle);
@@ -336,10 +252,10 @@ function renderTreeEntry(key, val, depth) {
     });
     entry.appendChild(collapsedLine);
   } else {
-    var keySpan = document.createElement("span");
+    var keySpan = $.createElement("span");
     keySpan.className = "dir-key";
     keySpan.textContent = key + ": ";
-    var valSpan = document.createElement("span");
+    var valSpan = $.createElement("span");
     valSpan.className = "dir-value";
     let val_ = String(val);
     if(typeof val === 'function') {
@@ -353,14 +269,14 @@ function renderTreeEntry(key, val, depth) {
 }
 function consolePrint(type, args, rawObj) {
   var indent = indentString.repeat(indentLevel);
-  var out = document.getElementById("console_out");
+  var out = $.getElementById("console_out");
   if (!out) return;
   var targetContainer = out;
   if (groupStack.length > 0) {
     var currentGroup = groupStack[groupStack.length - 1];
     targetContainer = currentGroup.contentDiv;
   }
-  var div = document.createElement("div");
+  var div = $.createElement("div");
   div.className = type;
   if (
     (type === "log" || type === "info" || type === "warn" ||
@@ -372,7 +288,7 @@ function consolePrint(type, args, rawObj) {
       var spanIdx = 0;
       var styleIdx = 0;
       while (spanIdx < formatted.length) {
-        var span = document.createElement("span");
+        var span = $.createElement("span");
         while (
           spanIdx < formatted.length &&
           !(formatted[spanIdx].nodeType === 3 && formatted[spanIdx].textContent === "")
@@ -386,11 +302,11 @@ function consolePrint(type, args, rawObj) {
         spanIdx++;
       }
     } else {
-      div.appendChild(document.createTextNode(indent));
+      div.appendChild($.createTextNode(indent));
       for (var i = 0; i < formatted.length; i++) {
-        if (i > 0) div.appendChild(document.createTextNode(" "));
+        if (i > 0) div.appendChild($.createTextNode(" "));
         if (formatted[i].nodeType === 3 && formatted[i].textContent.includes('\x1b[')) {
-          const tempDiv = document.createElement('div');
+          const tempDiv = $.createElement('div');
           tempDiv.innerHTML = ansiToHtml(formatted[i].textContent);
           while (tempDiv.firstChild) {
             div.appendChild(tempDiv.firstChild);
@@ -401,12 +317,12 @@ function consolePrint(type, args, rawObj) {
       }
     }
   } else if (type === "dir" && rawObj !== undefined) {
-    var collapsedRoot = document.createElement("div");
+    var collapsedRoot = $.createElement("div");
     collapsedRoot.className = "dir-collapsed-line";
-    var toggle = document.createElement("span");
+    var toggle = $.createElement("span");
     toggle.className = "dir-toggle";
-    toggle.textContent = "▶";
-    var typeSpan = document.createElement("span");
+    toggle.textContent = "▸";
+    var typeSpan = $.createElement("span");
     typeSpan.className = "dir-type";
     if (Array.isArray(rawObj) && Object.getPrototypeOf(rawObj) !== Object.prototype) {
       typeSpan.textContent = "Array(" + rawObj.length + ")";
@@ -428,11 +344,11 @@ function consolePrint(type, args, rawObj) {
       if (tree.classList.contains("dir-hidden")) {
         tree.classList.remove("dir-hidden");
         tree.classList.add("dir-expanded");
-        toggle.textContent = "▼";
+        toggle.textContent = "▾";
       } else {
         tree.classList.add("dir-hidden");
         tree.classList.remove("dir-expanded");
-        toggle.textContent = "▶";
+        toggle.textContent = "▸";
       }
     }
     toggle.addEventListener("click", doToggle);
@@ -444,10 +360,10 @@ function consolePrint(type, args, rawObj) {
     div.appendChild(tree);
   } else {
     var { formatted } = formatArgs(args);
-    div.appendChild(document.createTextNode(indent));
+    div.appendChild($.createTextNode(indent));
     for (var i = 0; i < formatted.length; i++) {
       if (formatted[i].nodeType === 3 && formatted[i].textContent.includes('\x1b[')) {
-        const tempDiv = document.createElement('div');
+        const tempDiv = $.createElement('div');
         tempDiv.innerHTML = ansiToHtml(formatted[i].textContent);
         while (tempDiv.firstChild) {
           div.appendChild(tempDiv.firstChild);
@@ -459,348 +375,434 @@ function consolePrint(type, args, rawObj) {
   }
   targetContainer.appendChild(div);
 }
-
-// Build
-const consoleBox = {
-  log: function () {
-    consolePrint("log", arguments);
-  },
-  info: function () {
-    consolePrint("info", arguments);
-  },
-  warn: function () {
-    consolePrint("warn", arguments);
-  },
-  error: function () {
-    consolePrint("error", arguments);
-  },
-  debug: function () {
-    consolePrint("debug", arguments);
-  },
-  assert: function (condition) {
-    if (!condition) {
-      var args = Array.prototype.slice.call(arguments, 1);
-      consolePrint("assert", ["Assertion failed:"].concat(args));
-    }
-  },
-  clear: function () {
-    var out = document.getElementById("console_out");
-    if (out) out.innerHTML = "";
-  },
-  count: function (label) {
-    label = label || "default";
-    counts[label] = (counts[label] || 0) + 1;
-    consolePrint("count", [label + ": " + counts[label]]);
-  },
-  countReset: function (label) {
-    label = label || "default";
-    counts[label] = 0;
-  },
-  group: function (label) {
-    createGroup(label || "", false);
-  },
-  groupCollapsed: function (label) {
-    createGroup(label || "", true);
-  },
-  groupEnd: function () {
-    if (groupStack.length > 0) {
-      groupStack.pop();
-    }
-  },
-  time: function (label) {
-    label = label || "default";
-    timers[label] = Date.now();
-  },
-  exception: function () {
-    consolePrint("error", arguments);
-  },
-  markTimeline: function () { },
-  timeline: function () { },
-  timelineEnd: function () { },
-  timeStamp: function (label) {
-    consolePrint("timeStamp", [
-      label ? String(label) : "Timestamp: " + new Date().toISOString(),
-    ]);
-  },
-  context: function () { },
-  memory: {},
-  timeEnd: function (label) {
-    label = label || "default";
-    if (timers[label]) {
-      var duration = Date.now() - timers[label];
-      consolePrint("time", [label + ": " + duration + "ms"]);
-      delete timers[label];
-    }
-  },
-  timeLog: function (label) {
-    label = label || "default";
-    if (timers[label]) {
-      var duration = Date.now() - timers[label];
-      consolePrint("timeLog", [label + ": " + duration + "ms"]);
-    }
-  },
-  trace: function () {
-    var err = new Error();
-    var stack = (err.stack || "").split("\n");
-    if (stack.length > 1) stack = stack.slice(1);
-    consolePrint("trace", ["Trace:", stack.join("\n")]);
-  },
-  table: function (data, columns) {
-    var out = document.getElementById("console_out");
-    if (!out) return;
-    var div = document.createElement("div");
-    div.className = "table";
-    var formatValue = function (value) {
-      if (value === undefined) return "undefined";
-      if (value === null) return "null";
-      if (typeof value === "string") return "'" + value + "'";
-      if (typeof value === "object") {
-        if (value.nodeType) return value.outerHTML || value.toString();
+function consoleBox(parent = $.body) {
+  const console_box = $.getElementById('console_box');
+  if(!console_box) {
+    let fragment = $.createDocumentFragment();
+    let textHtml = `
+      <div id="console_box">
+        <div id="console_output">
+          <div id="console_out"></div>
+        </div>
+        <div id="console_input">
+          <input id="console_in" type="text" autocapitalize="none" autocomplete="off" placeholder="Code ...">
+        </div>
+      </div>
+    `
+    let elTemp = $.createElement('div');
+    elTemp.innerHTML = textHtml;
+    let comp = elTemp.firstElementChild;
+    fragment.appendChild(comp)
+    parent.appendChild(fragment);
+  }
+  const input = $.getElementById("console_in");
+  if (input) {
+    var history = [];
+    var historyIndex = -1;
+    var tempInput = "";
+    input.addEventListener("keydown", function (e) {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        var code = input.value;
+        if (code.trim() !== "") {
+          if (history.length === 0 || history[history.length - 1] !== code) {
+            history.push(code);
+          }
+        }
+        historyIndex = history.length;
+        input.value = "";
+        tempInput = "";
         try {
-          var json = JSON.stringify(value);
-          return json === "{}" ? value.toString() : json;
-        } catch (e) {
-          return value.toString();
-        }
-      }
-      return String(value);
-    };
-    var table = document.createElement("table");
-    table.className = "console-table";
-    if (Array.isArray(data)) {
-      var isAllArrays =
-        data.length > 0 &&
-        data.every(function (item) {
-          return Array.isArray(item);
-        });
-      var isAllObjects =
-        data.length > 0 &&
-        data.every(function (item) {
-          return item && typeof item === "object" && !Array.isArray(item);
-        });
-      var headers;
-      if (isAllArrays) {
-        var maxLength = Math.max.apply(
-          Math,
-          data.map(function (arr) {
-            return Array.isArray(arr) ? arr.length : 0;
-          }),
-        );
-        headers = ["(index)"];
-        for (var i = 0; i < maxLength; i++) {
-          headers.push(String(i));
-        }
-      } else if (isAllObjects) {
-        var allKeys = new Set();
-        data.forEach(function (item) {
-          if (item && typeof item === "object" && !Array.isArray(item)) {
-            Object.keys(item).forEach(function (k) {
-              allKeys.add(k);
-            });
+          var result = new Function('return ' + code)();
+          if (result !== undefined) {
+            console.log(result);
           }
-        });
-        headers = ["(index)"].concat(Array.from(allKeys).sort());
-      } else {
-        headers = ["(index)", "Value"];
-      }
-      if (columns && Array.isArray(columns)) {
-        var filteredHeaders = ["(index)"];
-        columns.forEach(function (col) {
-          if (headers.indexOf(col) !== -1) {
-            filteredHeaders.push(col);
-          }
-        });
-        headers = filteredHeaders;
-      }
-      var thead = document.createElement("thead");
-      var headerRow = document.createElement("tr");
-      headers.forEach(function (h) {
-        var th = document.createElement("th");
-        th.textContent = h;
-        headerRow.appendChild(th);
-      });
-      thead.appendChild(headerRow);
-      table.appendChild(thead);
-      var tbody = document.createElement("tbody");
-      data.forEach(function (item, index) {
-        var row = document.createElement("tr");
-        var indexCell = document.createElement("td");
-        indexCell.textContent = index;
-        row.appendChild(indexCell);
-        headers.slice(1).forEach(function (header) {
-          var cell = document.createElement("td");
-          var value;
-          if (header === "Value") {
-            value = item;
-          } else if (isAllArrays && Array.isArray(item)) {
-            var arrayIndex = parseInt(header);
-            value = item[arrayIndex];
-          } else if (isAllObjects && item && typeof item === "object") {
-            value = item[header];
+        } catch (err) {
+          if (err instanceof SyntaxError) {
+            try {
+              new Function(code)();
+            } catch (e) {
+              console.error(e);
+            }
           } else {
-            value = undefined;
+            console.error(err);
           }
-          cell.textContent = formatValue(value);
-          row.appendChild(cell);
-        });
-        tbody.appendChild(row);
-      });
-      table.appendChild(tbody);
-    } else if (typeof data === "object" && data !== null) {
-      var props = new Set();
-      for (var key in data) props.add(key);
-      Object.getOwnPropertyNames(data).forEach(function (prop) {
-        props.add(prop);
-      });
-      var thead = document.createElement("thead");
-      var headerRow = document.createElement("tr");
-      ["(index)", "Value"].forEach(function (h) {
-        var th = document.createElement("th");
-        th.textContent = h;
-        headerRow.appendChild(th);
-      });
-      thead.appendChild(headerRow);
-      table.appendChild(thead);
-      var tbody = document.createElement("tbody");
-      Array.from(props)
-        .sort()
-        .forEach(function (prop) {
-          if (prop === "constructor") return;
-          var row = document.createElement("tr");
-          var propCell = document.createElement("td");
-          propCell.textContent = prop;
-          row.appendChild(propCell);
-          var valueCell = document.createElement("td");
+        }
+      } else if (e.key === "ArrowUp") {
+        if (history.length > 0 && historyIndex > 0) {
+          if (historyIndex === history.length) tempInput = input.value;
+          historyIndex--;
+          input.value = history[historyIndex];
+          setTimeout(function () {
+            input.setSelectionRange(input.value.length, input.value.length);
+          }, 0);
+        }
+        e.preventDefault();
+      } else if (e.key === "ArrowDown") {
+        if (history.length > 0 && historyIndex < history.length) {
+          historyIndex++;
+          if (historyIndex === history.length) {
+            input.value = tempInput;
+          } else {
+            input.value = history[historyIndex];
+          }
+          setTimeout(function () {
+            input.setSelectionRange(input.value.length, input.value.length);
+          }, 0);
+        }
+        e.preventDefault();
+      }
+    });
+    input.focus();
+  }
+  const out = $.getElementById("console_out");
+  if (out) {
+    var observer = new MutationObserver(function () {
+      out.scrollTop = out.scrollHeight;
+    });
+    observer.observe(out, { childList: true });
+  }
+  return {
+    log: function () {
+      consolePrint("log", arguments);
+    },
+    info: function () {
+      consolePrint("info", arguments);
+    },
+    warn: function () {
+      consolePrint("warn", arguments);
+    },
+    error: function () {
+      consolePrint("error", arguments);
+    },
+    debug: function () {
+      consolePrint("debug", arguments);
+    },
+    assert: function (condition) {
+      if (!condition) {
+        var args = Array.prototype.slice.call(arguments, 1);
+        consolePrint("assert", ["Assertion failed:"].concat(args));
+      }
+    },
+    clear: function () {
+      var out = $.getElementById("console_out");
+      if (out) out.innerHTML = "";
+    },
+    count: function (label) {
+      label = label || "default";
+      counts[label] = (counts[label] || 0) + 1;
+      consolePrint("count", [label + ": " + counts[label]]);
+    },
+    countReset: function (label) {
+      label = label || "default";
+      counts[label] = 0;
+    },
+    group: function (label) {
+      createGroup(label || "", false);
+    },
+    groupCollapsed: function (label) {
+      createGroup(label || "", true);
+    },
+    groupEnd: function () {
+      if (groupStack.length > 0) {
+        groupStack.pop();
+      }
+    },
+    time: function (label) {
+      label = label || "default";
+      timers[label] = Date.now();
+    },
+    exception: function () {
+      consolePrint("error", arguments);
+    },
+    markTimeline: function () { },
+    timeline: function () { },
+    timelineEnd: function () { },
+    timeStamp: function (label) {
+      consolePrint("timeStamp", [
+        label ? String(label) : "Timestamp: " + new Date().toISOString(),
+      ]);
+    },
+    context: function () { },
+    memory: {},
+    timeEnd: function (label) {
+      label = label || "default";
+      if (timers[label]) {
+        var duration = Date.now() - timers[label];
+        consolePrint("time", [label + ": " + duration + "ms"]);
+        delete timers[label];
+      }
+    },
+    timeLog: function (label) {
+      label = label || "default";
+      if (timers[label]) {
+        var duration = Date.now() - timers[label];
+        consolePrint("timeLog", [label + ": " + duration + "ms"]);
+      }
+    },
+    trace: function () {
+      var err = new Error();
+      var stack = (err.stack || "").split("\n");
+      if (stack.length > 1) stack = stack.slice(1);
+      consolePrint("trace", ["Trace:", stack.join("\n")]);
+    },
+    table: function (data, columns) {
+      var out = $.getElementById("console_out");
+      if (!out) return;
+      var div = $.createElement("div");
+      div.className = "table";
+      var formatValue = function (value) {
+        if (value === undefined) return "undefined";
+        if (value === null) return "null";
+        if (typeof value === "string") return "'" + value + "'";
+        if (typeof value === "object") {
+          if (value.nodeType) return value.outerHTML || value.toString();
           try {
-            valueCell.textContent = formatValue(data[prop]);
+            var json = JSON.stringify(value);
+            return json === "{}" ? value.toString() : json;
           } catch (e) {
-            valueCell.textContent = "<access denied>";
+            return value.toString();
           }
-          row.appendChild(valueCell);
+        }
+        return String(value);
+      };
+      var table = $.createElement("table");
+      table.className = "console-table";
+      if (Array.isArray(data)) {
+        var isAllArrays =
+          data.length > 0 &&
+          data.every(function (item) {
+            return Array.isArray(item);
+          });
+        var isAllObjects =
+          data.length > 0 &&
+          data.every(function (item) {
+            return item && typeof item === "object" && !Array.isArray(item);
+          });
+        var headers;
+        if (isAllArrays) {
+          var maxLength = Math.max.apply(
+            Math,
+            data.map(function (arr) {
+              return Array.isArray(arr) ? arr.length : 0;
+            }),
+          );
+          headers = ["(index)"];
+          for (var i = 0; i < maxLength; i++) {
+            headers.push(String(i));
+          }
+        } else if (isAllObjects) {
+          var allKeys = new Set();
+          data.forEach(function (item) {
+            if (item && typeof item === "object" && !Array.isArray(item)) {
+              Object.keys(item).forEach(function (k) {
+                allKeys.add(k);
+              });
+            }
+          });
+          headers = ["(index)"].concat(Array.from(allKeys).sort());
+        } else {
+          headers = ["(index)", "Value"];
+        }
+        if (columns && Array.isArray(columns)) {
+          var filteredHeaders = ["(index)"];
+          columns.forEach(function (col) {
+            if (headers.indexOf(col) !== -1) {
+              filteredHeaders.push(col);
+            }
+          });
+          headers = filteredHeaders;
+        }
+        var thead = $.createElement("thead");
+        var headerRow = $.createElement("tr");
+        headers.forEach(function (h) {
+          var th = $.createElement("th");
+          th.textContent = h;
+          headerRow.appendChild(th);
+        });
+        thead.appendChild(headerRow);
+        table.appendChild(thead);
+        var tbody = $.createElement("tbody");
+        data.forEach(function (item, index) {
+          var row = $.createElement("tr");
+          var indexCell = $.createElement("td");
+          indexCell.textContent = index;
+          row.appendChild(indexCell);
+          headers.slice(1).forEach(function (header) {
+            var cell = $.createElement("td");
+            var value;
+            if (header === "Value") {
+              value = item;
+            } else if (isAllArrays && Array.isArray(item)) {
+              var arrayIndex = parseInt(header);
+              value = item[arrayIndex];
+            } else if (isAllObjects && item && typeof item === "object") {
+              value = item[header];
+            } else {
+              value = undefined;
+            }
+            cell.textContent = formatValue(value);
+            row.appendChild(cell);
+          });
           tbody.appendChild(row);
         });
-      table.appendChild(tbody);
-    } else {
-      div.textContent = formatValue(data);
-      out.appendChild(div);
-      return;
-    }
-    div.appendChild(table);
-    out.appendChild(div);
-  },
-  dir: function (obj) {
-    consolePrint("dir", [""], obj);
-  },
-  dirxml: function (obj) {
-    function renderDomTree(node, depth) {
-      depth = depth || 0;
-      var container = document.createElement("div");
-      container.className = "dir-tree dir-indent-" + Math.min(depth, 9);
-      if (node.nodeType === 1) {
-        var entry = document.createElement("div");
-        entry.className = "dir-tree-entry dir-indent-" + Math.min(depth, 9);
-        var collapsedLine = document.createElement("div");
-        collapsedLine.className = "dir-collapsed-line";
-        var toggle = document.createElement("span");
-        toggle.className = "dir-toggle";
-        toggle.textContent = node.childNodes.length > 0 ? "▶" : "";
-        var tagSpan = document.createElement("span");
-        tagSpan.className = "dir-key";
-        tagSpan.textContent = "<" + node.nodeName.toLowerCase();
-        for (var i = 0; i < node.attributes.length; i++) {
-          var attr = node.attributes[i];
-          tagSpan.textContent += " " + attr.name + '="' + attr.value + '"';
-        }
-        tagSpan.textContent += ">";
-        if (toggle.textContent) collapsedLine.appendChild(toggle);
-        collapsedLine.appendChild(tagSpan);
-        var expanded = document.createElement("div");
-        expanded.className = "dir-hidden";
-        for (var j = 0; j < node.childNodes.length; j++) {
-          expanded.appendChild(renderDomTree(node.childNodes[j], depth + 1));
-        }
-        if (node.childNodes.length > 0) {
-          var closeTag = document.createElement("div");
-          closeTag.className =
-            "dir-tree-entry dir-indent-" + Math.min(depth + 1, 9);
-          var closeSpan = document.createElement("span");
-          closeSpan.className = "dir-key";
-          closeSpan.textContent = "</" + node.nodeName.toLowerCase() + ">";
-          closeTag.appendChild(closeSpan);
-          expanded.appendChild(closeTag);
-        }
-        function doToggle(e) {
-          e.stopPropagation();
-          if (expanded.classList.contains("dir-hidden")) {
-            expanded.classList.remove("dir-hidden");
-            expanded.classList.add("dir-expanded");
-            toggle.textContent = "▼";
-          } else {
-            expanded.classList.add("dir-hidden");
-            expanded.classList.remove("dir-expanded");
-            toggle.textContent = "▶";
-          }
-        }
-        if (toggle.textContent) {
-          toggle.addEventListener("click", doToggle);
-          toggle.addEventListener("touchstart", function (e) {
-            e.preventDefault();
-            doToggle(e);
+        table.appendChild(tbody);
+      } else if (typeof data === "object" && data !== null) {
+        var props = new Set();
+        for (var key in data) props.add(key);
+        Object.getOwnPropertyNames(data).forEach(function (prop) {
+          props.add(prop);
+        });
+        var thead = $.createElement("thead");
+        var headerRow = $.createElement("tr");
+        ["(index)", "Value"].forEach(function (h) {
+          var th = $.createElement("th");
+          th.textContent = h;
+          headerRow.appendChild(th);
+        });
+        thead.appendChild(headerRow);
+        table.appendChild(thead);
+        var tbody = $.createElement("tbody");
+        Array.from(props)
+          .sort()
+          .forEach(function (prop) {
+            if (prop === "constructor") return;
+            var row = $.createElement("tr");
+            var propCell = $.createElement("td");
+            propCell.textContent = prop;
+            row.appendChild(propCell);
+            var valueCell = $.createElement("td");
+            try {
+              valueCell.textContent = formatValue(data[prop]);
+            } catch (e) {
+              valueCell.textContent = "<access denied>";
+            }
+            row.appendChild(valueCell);
+            tbody.appendChild(row);
           });
-        }
-        entry.appendChild(collapsedLine);
-        if (node.childNodes.length > 0) entry.appendChild(expanded);
-        container.appendChild(entry);
-      } else if (node.nodeType === 3) {
-        var textContent = node.textContent.trim();
-        if (textContent) {
-          var textEntry = document.createElement("div");
-          textEntry.className =
-            "dir-tree-entry dir-indent-" + Math.min(depth, 9);
-          var textSpan = document.createElement("span");
-          textSpan.className = "dir-value";
-          textSpan.textContent = textContent;
-          textEntry.appendChild(textSpan);
-          container.appendChild(textEntry);
-        }
-      } else if (node.nodeType === 8) {
-        var commentEntry = document.createElement("div");
-        commentEntry.className =
-          "dir-tree-entry dir-indent-" + Math.min(depth, 9);
-        var commentSpan = document.createElement("span");
-        commentSpan.className = "dir-value";
-        commentSpan.textContent = "<!-- " + node.textContent + " -->";
-        commentEntry.appendChild(commentSpan);
-        container.appendChild(commentEntry);
-      } else if (node.nodeType === 9) {
-        for (var k = 0; k < node.childNodes.length; k++) {
-          container.appendChild(renderDomTree(node.childNodes[k], depth));
-        }
+        table.appendChild(tbody);
       } else {
-        var otherEntry = document.createElement("div");
-        otherEntry.className =
-          "dir-tree-entry dir-indent-" + Math.min(depth, 9);
-        var otherSpan = document.createElement("span");
-        otherSpan.className = "dir-value";
-        otherSpan.textContent = node.nodeName;
-        otherEntry.appendChild(otherSpan);
-        container.appendChild(otherEntry);
+        div.textContent = formatValue(data);
+        out.appendChild(div);
+        return;
       }
-      return container;
-    }
-    if (typeof obj === "object" && obj && obj.nodeType) {
-      var out = document.getElementById("console_out");
-      if (!out) return;
-      var div = document.createElement("div");
-      div.className = "dirxml";
-      div.appendChild(renderDomTree(obj, 0));
+      div.appendChild(table);
       out.appendChild(div);
-    } else {
-      consolePrint("dirxml", [""], obj);
-    }
-  },
-  profile: function (label) { },
-  profileEnd: function (label) { },
-};
+    },
+    dir: function (obj) {
+      consolePrint("dir", [""], obj);
+    },
+    dirxml: function (obj) {
+      function renderDomTree(node, depth) {
+        depth = depth || 0;
+        var container = $.createElement("div");
+        container.className = "dir-tree dir-indent-" + Math.min(depth, 9);
+        if (node.nodeType === 1) {
+          var entry = $.createElement("div");
+          entry.className = "dir-tree-entry dir-indent-" + Math.min(depth, 9);
+          var collapsedLine = $.createElement("div");
+          collapsedLine.className = "dir-collapsed-line";
+          var toggle = $.createElement("span");
+          toggle.className = "dir-toggle";
+          toggle.textContent = node.childNodes.length > 0 ? "▸" : "";
+          var tagSpan = $.createElement("span");
+          tagSpan.className = "dir-key";
+          tagSpan.textContent = "<" + node.nodeName.toLowerCase();
+          for (var i = 0; i < node.attributes.length; i++) {
+            var attr = node.attributes[i];
+            tagSpan.textContent += " " + attr.name + '="' + attr.value + '"';
+          }
+          tagSpan.textContent += ">";
+          if (toggle.textContent) collapsedLine.appendChild(toggle);
+          collapsedLine.appendChild(tagSpan);
+          var expanded = $.createElement("div");
+          expanded.className = "dir-hidden";
+          for (var j = 0; j < node.childNodes.length; j++) {
+            expanded.appendChild(renderDomTree(node.childNodes[j], depth + 1));
+          }
+          if (node.childNodes.length > 0) {
+            var closeTag = $.createElement("div");
+            closeTag.className =
+              "dir-tree-entry dir-indent-" + Math.min(depth + 1, 9);
+            var closeSpan = $.createElement("span");
+            closeSpan.className = "dir-key";
+            closeSpan.textContent = "</" + node.nodeName.toLowerCase() + ">";
+            closeTag.appendChild(closeSpan);
+            expanded.appendChild(closeTag);
+          }
+          function doToggle(e) {
+            e.stopPropagation();
+            if (expanded.classList.contains("dir-hidden")) {
+              expanded.classList.remove("dir-hidden");
+              expanded.classList.add("dir-expanded");
+              toggle.textContent = "▾";
+            } else {
+              expanded.classList.add("dir-hidden");
+              expanded.classList.remove("dir-expanded");
+              toggle.textContent = "▸";
+            }
+          }
+          if (toggle.textContent) {
+            toggle.addEventListener("click", doToggle);
+            toggle.addEventListener("touchstart", function (e) {
+              e.preventDefault();
+              doToggle(e);
+            });
+          }
+          entry.appendChild(collapsedLine);
+          if (node.childNodes.length > 0) entry.appendChild(expanded);
+          container.appendChild(entry);
+        } else if (node.nodeType === 3) {
+          var textContent = node.textContent.trim();
+          if (textContent) {
+            var textEntry = $.createElement("div");
+            textEntry.className =
+              "dir-tree-entry dir-indent-" + Math.min(depth, 9);
+            var textSpan = $.createElement("span");
+            textSpan.className = "dir-value";
+            textSpan.textContent = textContent;
+            textEntry.appendChild(textSpan);
+            container.appendChild(textEntry);
+          }
+        } else if (node.nodeType === 8) {
+          var commentEntry = $.createElement("div");
+          commentEntry.className =
+            "dir-tree-entry dir-indent-" + Math.min(depth, 9);
+          var commentSpan = $.createElement("span");
+          commentSpan.className = "dir-value";
+          commentSpan.textContent = "<!-- " + node.textContent + " -->";
+          commentEntry.appendChild(commentSpan);
+          container.appendChild(commentEntry);
+        } else if (node.nodeType === 9) {
+          for (var k = 0; k < node.childNodes.length; k++) {
+            container.appendChild(renderDomTree(node.childNodes[k], depth));
+          }
+        } else {
+          var otherEntry = $.createElement("div");
+          otherEntry.className =
+            "dir-tree-entry dir-indent-" + Math.min(depth, 9);
+          var otherSpan = $.createElement("span");
+          otherSpan.className = "dir-value";
+          otherSpan.textContent = node.nodeName;
+          otherEntry.appendChild(otherSpan);
+          container.appendChild(otherEntry);
+        }
+        return container;
+      }
+      if (typeof obj === "object" && obj && obj.nodeType) {
+        var out = $.getElementById("console_out");
+        if (!out) return;
+        var div = $.createElement("div");
+        div.className = "dirxml";
+        div.appendChild(renderDomTree(obj, 0));
+        out.appendChild(div);
+      } else {
+        consolePrint("dirxml", [""], obj);
+      }
+    },
+    profile: function (label) { },
+    profileEnd: function (label) { },
+  }
+}
 
 export default consoleBox;
