@@ -1,5 +1,6 @@
 # ConsoleBox
 
+[![npm version](https://img.shields.io/npm/v/@jlbyte/consolebox?logo=npm&label=npm)](https://www.npmjs.com/package/@jlbyte/consolebox)
 [![](https://data.jsdelivr.com/v1/package/gh/jlongyam/consoleBox/badge)](https://www.jsdelivr.com/package/gh/jlongyam/consoleBox)
 
 Dev Console in HTML
